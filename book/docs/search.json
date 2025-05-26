@@ -1,0 +1,24 @@
+[
+  {
+    "objectID": "tarif/understand_data.html",
+    "href": "tarif/understand_data.html",
+    "title": "Understanding the Data",
+    "section": "",
+    "text": "Problem setting\nWe have two challenges here: 1. The extremly scarce data as shown earlier 2. We have aggregated data, which mix multiple phenomena, crops, regions and perils.\nThis means that we need to assume that the data are governed not by a single distribution, but are a result of multiple distributions and artificial interventions. It is notoriously difficult to estimate the true probabilistic distribution of such a case. ch",
+    "crumbs": [
+      "Tarification",
+      "Understanding the Data"
+    ]
+  },
+  {
+    "objectID": "tarif/understand_data.html#reasoning",
+    "href": "tarif/understand_data.html#reasoning",
+    "title": "Understanding the Data",
+    "section": "Reasoning",
+    "text": "Reasoning\nWhy do i have so many small damages.\nIn some way, it doesn’t make a lot of sense because no farmer would claim a 0.1% damage. Hence, almost surely, this comes as an aggregation effect, where i have only one occasional event, while the area (here municipality) is large. How can I test that? The effect should become more extreme when i aggregate or when areas (municipalities) get larger or when there is more sum insured.\n\n\n\n\n\n\n\n\nWe have 12.1% of the Burn Cost in the range of 0-1%. We also We hypothesize that this is a dilution effect. If true, this effect should become stronger the larger the more fields are insured.\nDilution Effect on Sum insured\nFirst view:\n\n\n\n\n\n\n\n\nWe see no good correlation. But this is not surprising, because the variables are strongly Heteroskedastic We need to find another way to prove it.\nWe slice the burn cost by Quantiles of the sum insured. This accounts for the Heteroskedastic distribution. We choose 6 Bins.\n\n\n\n\n\n\n\n\nVolltreffer. We see that the higher the range of sum insured becomes, the more the gravitational centre of the mass wanders to the left.\nWe can display this even more visually:\n\n\n\n\n\n\n\n\nDilution Effect on area\nFirst view:\n\n\n\n\n\n\n\n\nWe see no good correlation. But this is not surprising, because the variables are strongly Heteroskedastic We need to find another way to prove it.\nWe slice the burn cost by Quantiles of the sum insured. This accounts for the Heteroskedastic distribution. We choose 6 Bins.\n\n\n\n\n\n\n\n\nVolltreffer. We see that the higher the range of sum insured becomes, the more the gravitational centre of the mass wanders to the left.\nWe can display this even more visually:\n\n\n\n\n\n\n\n\nBehavour of Dilution Effect\nThere is a strong dilution effect on the sum insured and none or a much weaker on the area. Now as we know that there is a dilution effect in place, we can ask how this would look like on a statistics side.\nSimulation.\nExponential ↔︎ Gamma (Erlang) linkage If each atomic unit of exposure has an Exponential severity distribution (shape = 1, scale = θ),\nthen the sum of k independent Exponentials is an Erlang(k, θ) distribution, i.e. a special case of Gamma with integer shape = k.\nMore generally, summing independent Gamma(αᵢ, θ) gives Gamma(∑αᵢ, θ). At k = 1 (no dilution), the aggregate is still Exponential.\nAs k grows (more dilution), shape = k grows, the distribution becomes less skewed, more bell-shaped.\nIn the limit k→∞ CLT kicks in and the Gamma turns into something approximately Normal (around mean = kθ).\nThis is exactly the contrary of what i see or not????\nSo gehts 1 Feld = Schaden P Exponential mit theta n Felder (aggregiert) = Schaden Erlang(alpha=n, theta) -&gt; darum sehe ich immer nur Erlang/Gamma da mittelwert schrumpft theta um theta/n",
+    "crumbs": [
+      "Tarification",
+      "Understanding the Data"
+    ]
+  }
+]

@@ -1,8 +1,9 @@
 
 ## --------------- LIBRARIES ------------------
 # renv::status()
-#renv::init(repos = "https://cran.r-project.org")
-
+# renv::init(repos = "https://cran.r-project.org")
+# renv::init()
+# renv::snapshot()
 # Install the RnData package from the GitLab repository
 # install.packages("remotes")
 # remotes::install_git("http://gitlab11.hagel.local/rnd/rnd_packages/RnData.git")

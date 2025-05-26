@@ -677,10 +677,11 @@ combined_plot <- (p1 + p2) / (p3 + p4) +
     )
   )
 combined_plot
+
 ```
 
 
-We have `r paste0(round(nrow(below1)/nrow(all_damage)*100, 1),"%)` of the Burn Cost in the range of 0-1%. 
+We have `r paste0(round(nrow(below1)/nrow(all_damage)*100, 1),"%")` of the Burn Cost in the range of 0-1%. 
 We also 
 We hypothesize that this is a dilution effect. If true, this effect should become stronger the larger the more fields are insured.
 
@@ -776,11 +777,15 @@ First view:
 #| eval: true
 #| echo: false
 #| message: false
+# 
+# area <- RnData::GET_geography("POR", "municipality", return = "sf") %>%
+#   mutate(area = as.numeric(sf::st_area(geom))) %>% sf::st_drop_geometry() %>% dplyr::select(municipality_id, area)
+area <- readRDS(here("DB", "meta", "portugal_continental_geography.rds"))%>% 
+  mutate(area = as.numeric(sf::st_area(geom))) %>%
+   sf::st_drop_geometry() %>%
+  dplyr::select(municipality_id, area)
 
-area <- RnData::GET_geography("POR", "municipality", return = "sf") %>%
-  mutate(area = as.numeric(sf::st_area(geom))) %>% sf::st_drop_geometry() %>% dplyr::select(municipality_id, area)
-
-all_damage_area <- data %>% drop_na() %>% filter(burn_cost > 0) %>% left_join(area)
+all_damage_area <- data %>% drop_na() %>% filter(burn_cost > 0) %>% left_join(area) 
 ggplot(all_damage_area, aes(area, burn_cost)) +
   geom_point(color = "salmon", alpha = 0.3)+
   labs(title = "Burn x Sum insured")+

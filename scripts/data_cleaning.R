@@ -18,13 +18,13 @@ nut <- nut %>% add_mun_key()
 
 
 
-portugal_continental_geography <- RnData::GET_geography("POR", "municipality", return = "SF") %>%
-  dplyr::filter(!(district_name %in% c("Madeira", "Azores"))) %>%
-  dplyr::mutate(
-    mun_key = unfreak_port_letters(municipality_name)) %>%
-  dplyr::left_join(nut, by = join_by(mun_key)) %>%
-  mutate(agro_region = toupper(agro_region)) %>%
-  dplyr::select(municipality_id, municipality_name, district_id, district_name, level_1, level_2, level_3, agro_region, mun_key)
+# portugal_continental_geography <- RnData::GET_geography("POR", "municipality", return = "SF") %>%
+#   dplyr::filter(!(district_name %in% c("Madeira", "Azores"))) %>%
+#   dplyr::mutate(
+#     mun_key = unfreak_port_letters(municipality_name)) %>%
+#   dplyr::left_join(nut, by = join_by(mun_key)) %>%
+#   mutate(agro_region = toupper(agro_region)) %>%
+#   dplyr::select(municipality_id, municipality_name, district_id, district_name, level_1, level_2, level_3, agro_region, mun_key)
 
 saveRDS(portugal_continental_geography, here("DB", "meta", "portugal_continental_geography.rds"))
 

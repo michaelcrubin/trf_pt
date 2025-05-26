@@ -266,8 +266,9 @@ get_1p_range <- function(){
   
 }
 
-area <- RnData::GET_geography("POR", "municipality", return = "sf") %>%
-  mutate(area = as.numeric(sf::st_area(geom))) %>% sf::st_drop_geometry() %>% dplyr::select(municipality_id, area)
+area <- readRDS(here("DB", "meta", "portugal_continental_geography.rds")) %>% sf::st_drop_geometry() %>% dplyr::select(municipality_id, area)
+# area <- RnData::GET_geography("POR", "municipality", return = "sf") %>%
+#   mutate(area = as.numeric(sf::st_area(geom))) %>% sf::st_drop_geometry() %>% dplyr::select(municipality_id, area)
   
 si <- data %>% drop_na() %>% filter(burn_cost > 0.0) %>%
   group_by(municipality_id) %>%
@@ -376,9 +377,9 @@ all_damage %>%
 
 #-------------## DILUTIONAL EFFECT ON AREA ------------------------
 
-
-area <- RnData::GET_geography("POR", "municipality", return = "sf") %>%
-  mutate(area = as.numeric(sf::st_area(geom))) %>% sf::st_drop_geometry() %>% dplyr::select(municipality_id, area)
+area <- readRDS(here("DB", "meta", "portugal_continental_geography.rds")) %>% sf::st_drop_geometry() %>% dplyr::select(municipality_id, area)
+# area <- RnData::GET_geography("POR", "municipality", return = "sf") %>%
+#   mutate(area = as.numeric(sf::st_area(geom))) %>% sf::st_drop_geometry() %>% dplyr::select(municipality_id, area)
 
 all_damage_area <- data %>% drop_na() %>% filter(burn_cost > 0) %>% left_join(area)
 ggplot(all_damage_area, aes(area, burn_cost)) +
@@ -425,4 +426,78 @@ all_damage_area %>%
     axis.text.x = element_text(angle = 45, hjust = 1)
   )
 
+
+
+# ------------------------------------------------------------
+#  Erlang-averaging demo
+#  • k identical Exponential(θ) severities
+#  • blue  = empirical density of their average
+#  • red   = theoretical Gamma(k, θ/k) density
+#  • grey  = each individual Exponential density
+# ------------------------------------------------------------
+
+
+invisible(capture.output(source(here("scripts", "gamma_funcs.R"))))
+
+# ---- parameters---------------------------------------
+
+n_sims <- 50000 # Monte-Carlo rows per exposure
+grid <- tidyr::expand_grid(theta = c(0.01, 0.1, 0.4), k = c(1, 3, 9, 27, 100), n_sims = n_sims) %>%
+  mutate(label = paste(theta, k, as.integer(n_sims), sep="_"))
+plots <- grid %>%purrr::pmap(., .f = run_exp_sim) %>% setNames(grid$label)
+
+
+
+th <- 0.4
+combined_plot <- plots %>%
+  keep_at(stringr::str_subset(names(plots), paste0("^",th,"_"))) %>%
+  wrap_plots(ncol = 2) +
+  plot_annotation(
+    title = paste("Burn Cost zoom by Ranges (theta = ",th,")"),
+    theme = theme(
+      plot.title = element_text(hjust = 0.5)
+    )
+  )
+print(combined_plot)
+
+
+
+th <- 0.1
+combined_plot <- plots %>%
+  keep_at(stringr::str_subset(names(plots), paste0("^",th,"_"))) %>%
+  wrap_plots(ncol = 2) +
+  plot_annotation(
+    title = paste("Burn Cost zoom by Ranges (theta = ",th,")"),
+    theme = theme(
+      plot.title = element_text(hjust = 0.5)
+    )
+  )
+print(combined_plot)
+
+
+
+th <- 0.01
+combined_plot <- plots %>%
+  keep_at(stringr::str_subset(names(plots), paste0("^",th,"_"))) %>%
+  wrap_plots(ncol = 2) +
+  plot_annotation(
+    title = paste("Burn Cost zoom by Ranges (theta = ",th,")"),
+    theme = theme(
+      plot.title = element_text(hjust = 0.5)
+    )
+  )
+print(combined_plot)
+
+
+n_sims <- 50000 
+grid <- tidyr::expand_grid(theta = c(0.1, 0.08, 0.05, 0.025, 0.015, 0.01, 0.008, 0.006, 0.004, 0.002, 0.001), k = c(20), n_sims = n_sims) %>%
+  mutate(label = paste(theta, k, as.integer(n_sims), sep="_"))
+plots <- grid %>%purrr::pmap(., .f = run_exp_sim) %>% setNames(grid$label)
+wrap_plots(plots, ncol = 2) +
+  plot_annotation(
+    title = paste("Growing theta)"),
+    theme = theme(
+      plot.title = element_text(hjust = 0.5)
+    )
+)
 
