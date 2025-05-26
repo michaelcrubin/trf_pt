@@ -1,0 +1,261 @@
+## Understanding Gammas {#sec-energy-intro .unnumbered}
+
+
+
+```{r}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+
+library(here)
+invisible(capture.output(source(here("scripts", "global.R"))))
+invisible(capture.output(source(here("scripts", "helpers.R"))))
+
+
+
+# SIMULATE MIX OF GAMMAS
+sim_mix <- function(k, n_zero, m, shape0, scale0, shape1, scale1) {
+  draws <- matrix(0, nrow = m, ncol = k)
+  
+  if (n_zero > 0){
+    draws[, 1:n_zero] <- rgamma(m * n_zero, shape0, scale = scale0)
+  }
+    
+  if (k - n_zero > 0){
+    draws[, (n_zero + 1):k] <- rgamma(m * (k - n_zero), shape1, scale = scale1)
+  }
+    
+  mix <- rowMeans(draws)
+  
+  list(
+    mix = mix,
+    g0 = rgamma(m, shape0, scale = scale0),
+    g1 = rgamma(m, shape1, scale = scale1),
+    df_long  = rbind(
+      data.frame(value = mix, dist = "average"),
+      data.frame(value = rgamma(m, shape0, scale0), dist = "near-zero"),
+      data.frame(value = rgamma(m, shape1, scale1), dist = "positive")
+    )
+  )
+}
+
+# ANALYTICALLY JOIN GAMMAS VIA MOMENT MATCHING
+mom_gamma <- function(n_zero, k, shape0, scale0, shape1, scale1) {
+  
+  w0 <- n_zero / k;  w1 <- 1 - w0
+  # single-draw mean/var
+  mu  <- w0*shape0*scale0 + w1*shape1*scale1
+  var <- w0*(shape0*scale0^2 + mu^2) + w1*(shape1*scale1^2 + mu^2) - mu^2
+  # average of k divide var by k
+  var <- var / k
+  shape_mm <- mu^2 / var
+  scale_mm <- var / mu
+  c(shape = shape_mm, scale = scale_mm)
+}
+
+fit_gamma_mle <- function(x){
+  
+  fit <- fitdistr(sim$mix, densfun = "gamma")
+  par_fit <- coef(fit)
+  c(shape = par_fit[["shape"]], scale = 1 / par_fit[["rate"]])
+  
+  
+}
+
+plot_gammas <- function(sim, par_mm, par_mle, ks_mm, ks_mle){
+  
+  # A) sample densities
+  p_samples <- ggplot(sim$df_long, aes(value, after_stat(density), colour = dist, fill = dist)) +
+    geom_density(alpha = 0.25, adjust = 1.2) +
+    coord_cartesian(xlim = c(0, quantile(sim$df_long$value, 0.99))) +
+    labs(title = paste0("Gamma Mix with ", n_zero, " zero-Gammas"),
+         x = "value", y = "density", colour = "", fill = "") +
+
+    theme_minimal(base_size = 13)
+  
+  # B) analytical vs fitted curves
+  grid <- data.frame(x = seq(0, quantile(sim$mix, 0.995), length = 400))
+  dens_mm  <- dgamma(grid$x, par_mm["shape"],  scale = par_mm["scale"])
+  dens_mle <- dgamma(grid$x, par_mle["shape"], scale = par_mle["scale"])
+  
+  p_curves <- ggplot() +
+    geom_histogram(data = data.frame(x = sim$mix),
+                   aes(x, after_stat(density)),
+                   bins = 100, fill = "grey80", alpha = 0.6) +
+    geom_line(data = grid, aes(x, dens_mm,  colour = paste("MM fit: p=",round(ks_mm$p.value, 2))), size = 1) +
+    geom_line(data = grid, aes(x, dens_mle, colour = paste("MLE fit: p=",round(ks_mle$p.value, 2))), size = 1, linetype = 2) +
+    labs(title = "Approximating the mix with a single Gamma",
+         x = "value", y = "density", colour = "") +
+    theme_minimal(base_size = 13)
+
+  # combine
+  return(p_samples / p_curves)
+  
+}
+
+
+
+```
+
+
+
+The Gamma distribution in plain language
+What is it?	A flexible curve for positive quantities (0 to ∞) that can look like a steep exponential, a gentle hump, or almost a bell—depending on two knobs.
+The two knobs	• Shape (k) = how many “little pieces” add up.
+• Scale (θ) = average size of each piece.
+Mean = k θ, Variance = k θ².
+Everyday analogy	Imagine a project that needs k independent mini-tasks, each taking a random time that averages θ days. Total duration = sum of those mini-tasks → that total is Gamma-shaped.
+Special cases	• k = 1 ⇒ Exponential (memory-less waiting-time).
+• k = ½, θ = 2 ⇒ χ²(1). Large k ⇒ looks Normal (central-limit effect).
+Natural phenomena it matches	– Total rainfall from many showers
+– Aggregate earthquake energy
+– Time until k failures in a machine
+– Insurance claim severity (right-skewed, non-negative)
+– Queueing/telecom traffic bursts
+Why actuaries & engineers like it	
+✅ Always non-negative 
+✅ Closed-form mean/variance
+✅ Simple additive property: if scale is equal, sums stay Gamma (handy for aggregation).
+Visual cheat-sheet	• k < 1 → spike near zero, heavy right tail (almost Exponential).
+• k ≈ 2–4 → single hump, moderate skew (looks like your burn-rate interior).
+• k ≫ 10 → nearly symmetric, nudging toward Normal.
+When to reach for it	1. Data are positive and skewed right.
+2. Variability seems proportional to the square of the mean (variance grows with mean²).
+3. You model a sum of identical Exponentials (waiting for the k-th event).
+
+
+
+
+
+### Only the positive gammas
+
+```{r, fig.height=15, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+set.seed(123)
+k <- 10 # components per observation
+n_zero <- 0 # how many “small” Gammas
+m <- 5000 # sample size
+# small-Gamma params
+shape0 <- 0.6
+scale0 <- 0.05
+# positive-Gamma params
+shape1 <- 3
+scale1 <- 0.4
+
+
+sim <- sim_mix(k, n_zero, m, shape0, scale0, shape1, scale1)
+par_mm <- mom_gamma(n_zero, k, shape0, scale0, shape1, scale1)
+par_mle <- fit_gamma_mle(sim$mix)
+ks_mm  <- ks.test(sim$mix, "pgamma", shape = par_mm["shape"], scale = par_mm["scale"])
+ks_mle <- ks.test(sim$mix, "pgamma", shape = par_mle["shape"], scale = par_mle["scale"])
+
+cat("KS p-value (moment-match) :", ks_mm$p.value, "\n")
+cat("KS p-value (MLE fit)     :", ks_mle$p.value, "\n\n")
+p <- plot_gammas(sim, par_mm, par_mle, ks_mm, ks_mle)
+p
+```
+
+
+### Only the zero gammas
+
+```{r, fig.height=15, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+set.seed(123)
+k <- 10 # components per observation
+n_zero <- 10 # how many “small” Gammas
+m <- 5000 # sample size
+# small-Gamma params
+shape0 <- 0.6
+scale0 <- 0.05
+# positive-Gamma params
+shape1 <- 3
+scale1 <- 0.4
+
+
+sim <- sim_mix(k, n_zero, m, shape0, scale0, shape1, scale1)
+par_mm <- mom_gamma(n_zero, k, shape0, scale0, shape1, scale1)
+par_mle <- fit_gamma_mle(sim$mix)
+ks_mm  <- ks.test(sim$mix, "pgamma", shape = par_mm["shape"], scale = par_mm["scale"])
+ks_mle <- ks.test(sim$mix, "pgamma", shape = par_mle["shape"], scale = par_mle["scale"])
+
+cat("KS p-value (moment-match) :", ks_mm$p.value, "\n")
+cat("KS p-value (MLE fit)     :", ks_mle$p.value, "\n\n")
+p <- plot_gammas(sim, par_mm, par_mle, ks_mm, ks_mle)
+p
+```
+
+
+
+### Only the 5050 mix gammas
+
+```{r, fig.height=15, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+set.seed(123)
+k <- 10 # components per observation
+n_zero <- 5 # how many “small” Gammas
+m <- 5000 # sample size
+# small-Gamma params
+shape0 <- 0.6
+scale0 <- 0.05
+# positive-Gamma params
+shape1 <- 3
+scale1 <- 0.4
+
+
+sim <- sim_mix(k, n_zero, m, shape0, scale0, shape1, scale1)
+par_mm <- mom_gamma(n_zero, k, shape0, scale0, shape1, scale1)
+par_mle <- fit_gamma_mle(sim$mix)
+ks_mm  <- ks.test(sim$mix, "pgamma", shape = par_mm["shape"], scale = par_mm["scale"])
+ks_mle <- ks.test(sim$mix, "pgamma", shape = par_mle["shape"], scale = par_mle["scale"])
+
+cat("KS p-value (moment-match) :", ks_mm$p.value, "\n")
+cat("KS p-value (MLE fit)     :", ks_mle$p.value, "\n\n")
+p <- plot_gammas(sim, par_mm, par_mle, ks_mm, ks_mle)
+p
+```
+
+
+### Only the 20 80 mix gammas
+
+```{r, fig.height=15, fig.width=10}
+
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+set.seed(123)
+k <- 10 # components per observation
+n_zero <- 8 # how many “small” Gammas
+m <- 5000 # sample size
+# small-Gamma params
+shape0 <- 0.6
+scale0 <- 0.05
+# positive-Gamma params
+shape1 <- 3
+scale1 <- 0.4
+
+
+sim <- sim_mix(k, n_zero, m, shape0, scale0, shape1, scale1)
+par_mm <- mom_gamma(n_zero, k, shape0, scale0, shape1, scale1)
+par_mle <- fit_gamma_mle(sim$mix)
+ks_mm  <- ks.test(sim$mix, "pgamma", shape = par_mm["shape"], scale = par_mm["scale"])
+ks_mle <- ks.test(sim$mix, "pgamma", shape = par_mle["shape"], scale = par_mle["scale"])
+
+cat("KS p-value (moment-match) :", ks_mm$p.value, "\n")
+cat("KS p-value (MLE fit)     :", ks_mle$p.value, "\n\n")
+p <- plot_gammas(sim, par_mm, par_mle, ks_mm, ks_mle)
+p
+```
+
+### Update Process on a Discrete Distribution
+

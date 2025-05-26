@@ -1,0 +1,42 @@
+
+## Set Up {#sec-energy-intro .unnumbered}
+
+
+```{r}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+library(here)
+
+# source(here("scripts", "helpers.R"))
+# source(here("scripts", "analysis_funcs.R"))
+# 
+# var_id <- "rain_hour"
+# country <- "switzerland"
+# suffix <- "w_mb"
+# 
+# event_metrics <- GET_error_metrics( var_id,  country, suffix, clean_zero = TRUE)
+# mc_sim_model <- readRDS( here("DB", "analysis",  paste0("montecarlo_time_","model_name","_",var_id, "_", country, "_",suffix,".rds")))
+# mc_sim_loc <- readRDS( here("DB", "analysis",  paste0("montecarlo_time_","loc_id","_",var_id, "_", country, "_",suffix,".rds")))
+
+```
+
+
+
+\
+\
+
+::: {.callout-tip title="The Interesting Effect of time Aggregation"}
+We observed that the errors reduced significantly when events were aggregated to years and ultimately over all time. We use here only the metric log_bias because it is stable on time aggregation and it is symetric around 0.
+:::
+
+\
+\
+\
+
+
+
+
+### Event x Year x all Time
+

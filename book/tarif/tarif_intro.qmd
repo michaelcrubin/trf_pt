@@ -1,0 +1,24 @@
+## Tarification {#sec-energy-intro .unnumbered}
+
+Having identified the performance limits of rainfall forecast models at the event level, the next step is to explore how these errors **propagate and transform** when used in downstream applications — particularly in **risk modelling**.
+
+This chapter focuses on characterizing the **structure of forecast errors** with the goal of building **error-resilient models**. Instead of treating error as a residual nuisance, we study its **systematic components** and **aggregation behavior** to inform robust decision frameworks.
+
+Key themes include:
+
+- The effect of **temporal aggregation**: How averaging over hours, days, or months changes the magnitude and distribution of forecast error.
+- Distinguishing between **bias and noise**: Separating persistent model drift from stochastic fluctuation.
+- Detecting **long-term trends**: Identifying structural shifts in model performance across time.
+
+These analyses allow us to simulate realistic scenarios, stress-test risk models, and better quantify uncertainty in operational use cases.
+
+::: {.callout-tip title="Summary"}
+
+This chapter transitions from performance diagnostics to **error modelling**:
+- How do errors behave under time aggregation?
+- Which part of the error is **systematic** vs **random**?
+- How stable are model biases over space and time?
+
+Understanding these questions is essential for transforming raw forecast outputs into **trustworthy probabilistic inputs** for applications in insurance, farming, and beyond.
+
+:::

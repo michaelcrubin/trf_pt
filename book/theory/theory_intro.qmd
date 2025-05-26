@@ -1,0 +1,28 @@
+## Theoretical Concept {#sec-energy-intro .unnumbered}
+
+Assessing the quality of rain forecasts is non-trivial due to both statistical and meteorological complexities. A common yet flawed approach is to evaluate performance on an **hourly basis** using metrics like MAE or RMSE. This introduces two major issues:
+
+1. **Violation of independence assumptions** — Hourly rain data is temporally dependent (not i.i.d.), making standard error metrics statistically invalid.
+2. **Climatological bias** — Naïve benchmarks (e.g., always predicting zero rainfall) perform artificially well in dry climates but poorly elsewhere, creating non-comparable results.
+
+To overcome this, we reformulate the evaluation **around rain events**, which are the natural unit of occurrence. The chapter proceeds in the following stages:
+
+- We define **event boundaries** using the concept of **memorylessness**, derived from autocorrelation decay.
+- We evaluate each rain event using a set of **interpretable, robust metrics** that capture bias, magnitude, distributional accuracy, and timing.
+- We inspect errors **visually** and **probabilistically**, comparing models and diagnosing behavior across conditions.
+- We run **out-of-sample validation** on independent stations (Bodenmessnetz) to assess model generalization.
+- Finally, we explore how **temporal aggregation** affects forecast errors, and derive scaling laws for error distributions.
+
+This systematic, event-based approach ensures statistical validity, cross-regional comparability, and operational relevance — critical for domains like agriculture and insurance.
+
+::: {.callout-tip title="Summary"}
+
+Rainfall poses deep challenges for model evaluation:
+
+- Standard statistical metrics fail at extremes.
+- Full spatial coverage is unattainable.
+- Temporal consistency across years and models is difficult.
+
+This chapter lays the foundation for a rigorous and fair comparison of rain forecast models under real-world constraints.
+
+:::

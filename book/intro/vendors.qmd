@@ -1,0 +1,90 @@
+# Vendors {#sec-energy-intro .unnumbered}
+
+```{r}
+#| results: "asis"
+#| echo: false
+library(here)
+source(here("scripts", "helpers.R"))
+```
+
+
+\
+
+::: {.callout-tip title="Summary"}
+We engaged six weather data providers to evaluate their suitability for our operational requirements. After technical meetings and discussions, we decided to proceed with three vendors for further integration and testing.
+:::
+
+\
+
+## Meteomatics (MM)
+
+Meteomatics is our current data provider. They offer:
+
+- **High accessibility**: Simple and efficient API for data extraction.
+- **Flexible pricing**: Adaptive pricing models depending on usage volume.
+- **Innovative data sources**: Use of Meteodrones to collect upper-atmosphere data.
+
+**Limitations**:
+
+- **Transparency concerns**: There is some uncertainty around whether all models marketed as “non-calibrated” are truly uncalibrated.
+- **Focus on data quality**: Less emphasis on scientific validation and reproducibility.
+
+\
+
+## Meteoblue
+
+Meteoblue provides a more academic and model-focused offering:
+
+- **Scientific orientation**: High emphasis on meteorological accuracy and method transparency.
+- **Wide model base**: Access to over 40 weather models, including ensemble forecasts.
+
+**Limitations**:
+
+- **API complexity**: The offer and API structure are less intuitive and harder to integrate.
+- **Flexibility**: Less accommodating in terms of custom access and pricing.
+
+\
+
+## MeteoSwiss
+
+MeteoSwiss is the official national meteorological agency of Switzerland.
+
+- **Planned inclusion**: Model data will become publicly accessible starting April 1, 2025.
+- **Next steps**: Integration and evaluation will be reassessed once the API is available.
+
+\
+
+## Ubimet
+
+Ubimet is an Austrian vendor with strong experience in Germany and the insurance sector.
+
+- **Data quality focus**: High accuracy and reliable forecasts.
+- **Insurance-ready**: Tailored offerings for the insurance industry.
+
+**Limitations**:
+
+- **Cost**: Estimated to be approximately three times more expensive than competitors.
+- **Onboarding requirements**: NDA and commercial agreement required before testing.
+
+\
+
+## Meteotest
+
+Meteotest is a Swiss provider known for customized solutions.
+
+- **Customization**: Strong in bespoke development and quality control.
+- **Niche offering**: Suitable for specific use cases but lacks scalability and broad productization.
+
+\
+
+## Jua AI
+
+Jua is a Zurich-based startup claiming to develop the first AI-native weather model.
+
+- **AI approach**: Based on a proprietary large-scale physics model.
+- **Continental performance**: Promising results in continental Europe.
+
+**Limitations**:
+
+- **Alpine accuracy**: Performance in mountainous regions (e.g., Alps) is still limited.
+- **Product maturity**: The offering is still in early stages, and some internal claims require further validation.

@@ -1,0 +1,16 @@
+## Geographic Patterns {#sec-data-visualization .unnumbered}
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+library(here)
+
+```
+
+
+probably nothing but welllll see
+
+compare to Höhenmodell, neigung, etc... or even calc a topographic break index
+
+maybe also test hypo if it is better to work with lower res and average over some km2 rather than trying to be precise. it time, it also has a healing effect.

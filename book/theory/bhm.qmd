@@ -1,0 +1,56 @@
+
+# Bayesian Hierarchical Models {#sec-energy-intro .unnumbered}
+
+
+```{r}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+library(here)
+
+# source(here("scripts", "helpers.R"))
+# source(here("scripts", "analysis_funcs.R"))
+# 
+# var_id <- "rain_hour"
+# country <- "switzerland"
+# suffix <- "w_mb"
+# 
+# event_metrics <- GET_error_metrics( var_id,  country, suffix, clean_zero = TRUE)
+
+
+
+```
+
+\
+\
+
+::: {.callout-warning title="Temporal dependence of Rain events"}
+After a first inspection, we are now interested in getting a more scientific interpretation of the errors. We continue on a per Event level.
+Important to emphasize is that none of the model reaches a satisfactory performance.
+:::
+
+\
+\
+\
+
+
+### Analysis by Metric
+
+
+
+<!-- #### Sum Ratio -->
+
+<!-- The Sum Ration is the sum of the model divided by the sum of the station. -->
+
+<!-- ```{r} -->
+<!-- #| warning: false -->
+<!-- #| eval: true -->
+<!-- #| echo: false -->
+<!-- #| message: false -->
+<!-- dens_selection_plot(event_metrics, "sum_ratio") -->
+<!-- ``` -->
+
+<!-- \ -->
+
+#### Bias

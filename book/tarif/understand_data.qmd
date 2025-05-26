@@ -1,0 +1,887 @@
+## Understanding the Data {#sec-data-visualization .unnumbered}
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+library(here)
+invisible(capture.output(source(here("scripts", "global.R"))))
+invisible(capture.output(source(here("scripts", "helpers.R"))))
+invisible(capture.output(source(here("scripts", "bayes.R"))))
+
+# prep data
+x <- get_burn()
+data <- get_damage_grid() %>% left_join(x) %>% replace_na(list(burn_cost = 0))
+
+data_district <- data %>%
+  group_by(year, crop_key, district_name) %>%
+  summarise(
+    sum_insured = sum(sum_insured,na.rm = TRUE),
+    tot_claims = sum(tot_claims, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(burn_cost = tot_claims / sum_insured) %>%
+   mutate(across(where(is.numeric), ~ ifelse(is.nan(.), 0, .)))
+
+data_country <- data %>%
+  group_by(year, crop_key) %>%
+  summarise(
+    sum_insured = sum(sum_insured,na.rm = TRUE),
+    tot_claims = sum(tot_claims, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(burn_cost = tot_claims / sum_insured) %>%
+   mutate(across(where(is.numeric), ~ ifelse(is.nan(.), 0, .)))
+
+
+# hist(data$sum_insured, main = "Raw Damage (Uncapped)", col = "blue", breaks = 50)
+# hist(data$burn_cost, main = "Raw Damage (Uncapped)", col = "orange", breaks = 50)
+# hist(data$tot_claims, main = "Raw Damage (Uncapped)", col = "orange", breaks = 50)
+# 
+
+
+```
+
+### Problem setting
+
+We have two challenges here: 1. The extremly scarce data as shown earlier 2. We have aggregated data, which mix multiple phenomena, crops, regions and perils.
+
+This means that we need to assume that the data are governed not by a single distribution, but are a result of multiple distributions and artificial interventions. It is notoriously difficult to estimate the true probabilistic distribution of such a case. ch
+
+### On all Data / Municipality Level
+
+We get a first overview on the burn cost distribution on the aggregated level. To see better the different models, we slice the ranges.
+
+```{r, fig.height=7, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+
+p1 <- data %>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "darkblue", color = "transparent", alpha=1) + 
+  labs(title = "All 258'590 Muni x Crop Cells") +
+  theme_minimal()
+
+p2 <- data %>%
+   drop_na() %>%
+  #filter(has_data > 0) %>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "darkblue", color = "transparent", alpha=0.75) + 
+  labs(title = "Muni x Crop with Production (7690)") +
+  theme_minimal()
+
+p3 <- data %>%
+  filter(burn_cost > 0.0) %>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "darkblue", color = "transparent", alpha=0.5) + 
+  labs(title = "All with Burn > 0") +
+  theme_minimal()
+
+p4 <- data %>%
+  filter(burn_cost > 0.1 & burn_cost<0.99) %>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "darkblue", color = "transparent", alpha=0.25) + 
+  labs(title = "Burn between 0.1 and 0.99") +
+  theme_minimal()
+
+combined_plot <- (p1 + p2) / (p3 + p4) +
+  plot_annotation(
+    title = "Burn Cost on differnt Ranges",
+    theme = theme(
+      plot.title = element_text(
+        hjust = 0.5, 
+
+      )
+    )
+  )
+combined_plot
+```
+
+Observations:
+
+-   Extreme (truly extreme) spike at $x=0$
+-   Decay-shaped (e.g. exponential) distribution of values $x \epsilon[0,~0.2]$
+-   Smaller peak at $x=1$
+-   Reasonable distribution of the shape beta, gamma or lognormal at $x \epsilon[0.2, 1]$
+
+### Probability by slice
+
+```{r, fig.height=7, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+
+
+data %>%
+  mutate(
+    slice = case_when(
+      burn_cost == 0 ~"0_zero_inflater",
+      burn_cost >0 & burn_cost <0.15 ~"1_expo_decay",
+      burn_cost >0.15 & burn_cost < 0.99 ~"2_natural_phenomena",
+      burn_cost > 0.99 ~"3_damage_ceiling",
+      TRUE ~"9_dummy"
+      )
+  ) %>%
+  group_by(slice) %>%
+  summarise(n = n(), .groups = "drop") %>%
+  mutate(percent = round(100*(n / sum(n)), 3)) %>%
+  arrange((slice)) %>%
+  flextable() %>%
+  theme_vanilla() %>%
+  bold(j = c("percent"), bold = TRUE)
+```
+
+![](images/model.png)
+
+![](images/gamma-png.PNG)
+
+
+### Try to match it
+
+```{r, fig.height=7, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+
+
+
+
+```
+
+
+
+### Analysis of main crop
+
+We slice only the crops maca and pera and see if the behavour is the same.
+
+#### Apple
+
+```{r, fig.height=7, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+
+cps <- "maca"
+
+p1 <- data %>%
+  dplyr::filter(crop_key %in% cps)%>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "darkgreen", color = "transparent", alpha=1) + 
+  labs(title = "All 258'590 Muni x Crop Cells") +
+  theme_minimal()
+
+p2 <- data %>%
+    dplyr::filter(crop_key %in% cps)%>%
+   drop_na() %>%
+  #filter(has_data > 0) %>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "darkgreen", color = "transparent", alpha=0.75) + 
+  labs(title = "Muni x Crop with Production (7690)") +
+  theme_minimal()
+
+p3 <- data %>%
+    dplyr::filter(crop_key %in% cps)%>%
+  filter(burn_cost > 0.0) %>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "darkgreen", color = "transparent", alpha=0.5) + 
+  labs(title = "All with Burn > 0") +
+  theme_minimal()
+
+p4 <- data %>%
+    dplyr::filter(crop_key %in% cps)%>%
+  filter(burn_cost > 0.1 & burn_cost<0.99) %>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "darkgreen", color = "transparent", alpha=0.25) + 
+  labs(title = "Burn between 0.1 and 0.99") +
+  theme_minimal()
+
+combined_plot <- (p1 + p2) / (p3 + p4) +
+  plot_annotation(
+    title = "Burn Cost on differnt Ranges",
+    theme = theme(
+      plot.title = element_text(
+        hjust = 0.5, 
+
+      )
+    )
+  )
+combined_plot
+```
+
+#### Pear
+
+```{r, fig.height=7, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+
+cps <- "pera"
+
+p1 <- data %>%
+  dplyr::filter(crop_key %in% cps)%>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "darkgreen", color = "transparent", alpha=1) + 
+  labs(title = "All 258'590 Muni x Crop Cells") +
+  theme_minimal()
+
+p2 <- data %>%
+    dplyr::filter(crop_key %in% cps)%>%
+   drop_na() %>%
+  #filter(has_data > 0) %>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "darkgreen", color = "transparent", alpha=0.75) + 
+  labs(title = "Muni x Crop with Production (7690)") +
+  theme_minimal()
+
+p3 <- data %>%
+    dplyr::filter(crop_key %in% cps)%>%
+  filter(burn_cost > 0.0) %>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "darkgreen", color = "transparent", alpha=0.5) + 
+  labs(title = "All with Burn > 0") +
+  theme_minimal()
+
+p4 <- data %>%
+    dplyr::filter(crop_key %in% cps)%>%
+  filter(burn_cost > 0.1 & burn_cost<0.99) %>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "darkgreen", color = "transparent", alpha=0.25) + 
+  labs(title = "Burn between 0.1 and 0.99") +
+  theme_minimal()
+
+combined_plot <- (p1 + p2) / (p3 + p4) +
+  plot_annotation(
+    title = "Burn Cost on differnt Ranges",
+    theme = theme(
+      plot.title = element_text(
+        hjust = 0.5, 
+
+      )
+    )
+  )
+combined_plot
+```
+
+#### Corn
+
+```{r, fig.height=7, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+
+cps <- "milho"
+
+p1 <- data %>%
+  dplyr::filter(crop_key %in% cps)%>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "darkgreen", color = "transparent", alpha=1) + 
+  labs(title = "All 258'590 Muni x Crop Cells") +
+  theme_minimal()
+
+p2 <- data %>%
+    dplyr::filter(crop_key %in% cps)%>%
+   drop_na() %>%
+  #filter(has_data > 0) %>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "darkgreen", color = "transparent", alpha=0.75) + 
+  labs(title = "Muni x Crop with Production (7690)") +
+  theme_minimal()
+
+p3 <- data %>%
+    dplyr::filter(crop_key %in% cps)%>%
+  filter(burn_cost > 0.0) %>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "darkgreen", color = "transparent", alpha=0.5) + 
+  labs(title = "All with Burn > 0") +
+  theme_minimal()
+
+p4 <- data %>%
+    dplyr::filter(crop_key %in% cps)%>%
+  filter(burn_cost > 0.1 & burn_cost<0.99) %>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "darkgreen", color = "transparent", alpha=0.25) + 
+  labs(title = "Burn between 0.1 and 0.99") +
+  theme_minimal()
+
+combined_plot <- (p1 + p2) / (p3 + p4) +
+  plot_annotation(
+    title = "Burn Cost on differnt Ranges",
+    theme = theme(
+      plot.title = element_text(
+        hjust = 0.5, 
+
+      )
+    )
+  )
+combined_plot
+```
+
+#### Cherry
+
+```{r, fig.height=7, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+
+cps <- "cereja"
+
+p1 <- data %>%
+  dplyr::filter(crop_key %in% cps)%>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "darkgreen", color = "transparent", alpha=1) + 
+  labs(title = "All 258'590 Muni x Crop Cells") +
+  theme_minimal()
+
+p2 <- data %>%
+    dplyr::filter(crop_key %in% cps)%>%
+   drop_na() %>%
+  #filter(has_data > 0) %>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "darkgreen", color = "transparent", alpha=0.75) + 
+  labs(title = "Muni x Crop with Production (7690)") +
+  theme_minimal()
+
+p3 <- data %>%
+    dplyr::filter(crop_key %in% cps)%>%
+  filter(burn_cost > 0.0) %>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "darkgreen", color = "transparent", alpha=0.5) + 
+  labs(title = "All with Burn > 0") +
+  theme_minimal()
+
+p4 <- data %>%
+    dplyr::filter(crop_key %in% cps)%>%
+  filter(burn_cost > 0.1 & burn_cost<0.99) %>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "darkgreen", color = "transparent", alpha=0.25) + 
+  labs(title = "Burn between 0.1 and 0.99") +
+  theme_minimal()
+
+combined_plot <- (p1 + p2) / (p3 + p4) +
+  plot_annotation(
+    title = "Burn Cost on differnt Ranges",
+    theme = theme(
+      plot.title = element_text(
+        hjust = 0.5, 
+
+      )
+    )
+  )
+combined_plot
+```
+
+### Do years make a difference
+
+We split them by years and look only on between 0.1 and 0.99
+
+```{r, fig.height=12, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+
+yr <- 2014
+lw <- 0.0
+up <- 1.99
+p1 <- data %>%
+  filter(year == yr) %>%
+  filter(burn_cost > lw & burn_cost<up) %>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "darkred", color = "transparent", alpha=1) + 
+  labs(title = yr) +
+  theme_minimal()
+
+yr <- 2015
+p2 <- data %>%
+  filter(year == yr) %>%
+  filter(burn_cost > lw & burn_cost<up) %>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "darkred", color = "transparent", alpha=0.9) + 
+  labs(title = yr) +
+  theme_minimal()
+
+yr <- 2016
+p3 <- data %>%
+  filter(year == yr) %>%
+  filter(burn_cost > lw & burn_cost<up) %>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "darkred", color = "transparent", alpha=0.8) + 
+  labs(title = yr) +
+  theme_minimal()
+
+yr <- 2017
+p4 <- data %>%
+  filter(year == yr) %>%
+  filter(burn_cost > lw & burn_cost<up) %>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "darkred", color = "transparent", alpha=0.7) + 
+  labs(title = yr) +
+  theme_minimal()
+
+yr <- 2019
+p5 <- data %>%
+  filter(year == yr) %>%
+  filter(burn_cost > lw & burn_cost<up) %>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "darkred", color = "transparent", alpha=0.6) + 
+  labs(title = yr) +
+  theme_minimal()
+
+yr <- 2020
+p6 <- data %>%
+  filter(year == yr) %>%
+  filter(burn_cost > lw & burn_cost<up) %>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "darkred", color = "transparent", alpha=0.5) + 
+  labs(title = yr) +
+  theme_minimal()
+
+yr <- 2021
+p7 <- data %>%
+  filter(year == yr) %>%
+  filter(burn_cost > lw & burn_cost<up) %>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "darkred", color = "transparent", alpha=0.4) + 
+  labs(title = yr) +
+  theme_minimal()
+
+yr <- 2022
+p8 <- data %>%
+  filter(year == yr) %>%
+  filter(burn_cost > lw & burn_cost<up) %>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "darkred", color = "transparent", alpha=0.3) + 
+  labs(title = yr) +
+  theme_minimal()
+
+yr <- 2023
+p9 <- data %>%
+  filter(year == yr) %>%
+  filter(burn_cost > lw & burn_cost<up) %>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "darkred", color = "transparent", alpha=0.2) + 
+  labs(title = yr) +
+  theme_minimal()
+
+
+combined_plot <- (p1 + p2) / (p3 + p5) / (p6 + p7) / (p8 + p9)+
+  plot_annotation(
+    title = "Burns on 0.1-0.99",
+    theme = theme(
+      plot.title = element_text(
+        hjust = 0.5, 
+
+      )
+    )
+  )
+combined_plot
+```
+
+### >1 Peak
+
+How does the >1 peak behave? We learn that the crop x Municipalities x years with values >1 do also have a significantly higher mean, i.e. almost double. This is not statistically solid (uneven data), but it is a strong hint that the values > 1 are governed by the distribution.
+
+
+```{r, fig.height=12, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+
+tbl <- data %>%
+  dplyr::filter(burn_cost > 0.15)%>%
+  mutate(mass_above_1 = as.integer(burn_cost >= 1)) %>%
+  group_by(crop_key, municipality_name) %>%
+  summarise(mass_above_1 = sum(mass_above_1),
+            has_above_1 = mass_above_1 > 0,
+            n=n(),
+            mean_bc = mean(burn_cost), 
+            .groups = "drop")
+
+tbl %>% group_by(has_above_1) %>%
+  summarise(mean_bc = mean(mean_bc), n=n()) %>%
+  flextable() %>%
+  theme_vanilla()
+
+
+```
+
+
+
+### Aggregated to District Level
+
+We aggregate to district level and analyze on this data
+
+```{r, fig.height=7, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+
+p1 <- data_district %>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "darkblue", color = "transparent", alpha=1) + 
+  labs(title = "All 16740 Dist x Crop Cells") +
+  theme_minimal()
+
+p2 <- data_district %>%
+  filter(burn_cost > 0) %>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "darkblue", color = "transparent", alpha=0.75) + 
+  labs(title = "All with Burn > 0") +
+  theme_minimal()
+
+p3 <- data_district %>%
+  filter(burn_cost > 0.01) %>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "darkblue", color = "transparent", alpha=0.5) + 
+  labs(title = "All with Burn > 0.01") +
+  theme_minimal()
+
+p4 <- data_district %>%
+  filter(burn_cost > 0.15) %>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "darkblue", color = "transparent", alpha=0.25) + 
+  labs(title = "Burn > 0.15") +
+  theme_minimal()
+
+combined_plot <- (p1 + p2) / (p3 + p4) +
+  plot_annotation(
+    title = "Burn Cost on differnt Ranges",
+    theme = theme(
+      plot.title = element_text(
+        hjust = 0.5, 
+
+      )
+    )
+  )
+combined_plot
+```
+
+
+
+### Aggregated to Country Level
+
+We aggregate to district level and analyse on this data
+
+```{r, fig.height=7, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+
+p1 <- data_country%>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "darkred", color = "transparent", alpha=1) + 
+  labs(title = "All 930 x Crop Cells") +
+  theme_minimal()
+
+p2 <- data_country %>%
+  filter(burn_cost > 0) %>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "darkred", color = "transparent", alpha=0.75) + 
+  labs(title = "All with Burn > 0") +
+  theme_minimal()
+
+p3 <- data_country %>%
+  filter(burn_cost > 0.01) %>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "darkred", color = "transparent", alpha=0.5) + 
+  labs(title = "All with Burn > 0.01") +
+  theme_minimal()
+
+p4 <- data_country %>%
+  filter(burn_cost > 0.15) %>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "darkred", color = "transparent", alpha=0.25) + 
+  labs(title = "Burn > 0.15") +
+  theme_minimal()
+
+combined_plot <- (p1 + p2) / (p3 + p4) +
+  plot_annotation(
+    title = "Burn Cost on differnt Ranges",
+    theme = theme(
+      plot.title = element_text(
+        hjust = 0.5, 
+
+      )
+    )
+  )
+combined_plot
+```
+
+
+
+## Reasoning
+
+### Why do i have so many small damages.
+
+In some way, it doesn't make a lot of sense because no farmer would claim a 0.1% damage. Hence, almost surely, this comes as an aggregation effect, where i have only one occasional event, while the area (here municipality) is large.
+How can I test that? The effect should become more extreme when i aggregate or when areas (municipalities) get larger or when there is more sum insured.
+
+
+```{r, fig.height=7, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+all_damage <- data %>% drop_na() %>%filter(burn_cost > 0.0)
+below1<-  all_damage %>%filter( burn_cost<0.01)
+
+
+p1 <- all_damage %>%
+  filter(burn_cost > 0.0 ) %>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "orange", color = "transparent", alpha=1) + 
+  labs(title = "All Burn Cost") +
+  theme_minimal()
+
+p2 <- all_damage %>%
+    filter(burn_cost > 0.0 & burn_cost<0.25) %>%
+  #filter(has_data > 0) %>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "orange", color = "transparent", alpha=0.75) + 
+  labs(title = "Below SB threshold") +
+  theme_minimal()
+
+p3 <- all_damage %>%
+  filter(burn_cost > 0.0 & burn_cost<0.1) %>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "orange", color = "transparent", alpha=0.5) + 
+  labs(title = "Below 10%") +
+  theme_minimal()
+
+p4 <- all_damage %>%
+  filter(burn_cost > 0.0 & burn_cost<0.01) %>%
+  ggplot(aes(x = burn_cost)) +
+  geom_histogram(bins = 50, fill = "orange", color = "transparent", alpha=0.25) + 
+  labs(title = "Below 1%") +
+  theme_minimal()
+
+combined_plot <- (p1 + p2) / (p3 + p4) +
+  plot_annotation(
+    title = "Burn Cost zoom by Ranges",
+    theme = theme(
+      plot.title = element_text(
+        hjust = 0.5, 
+
+      )
+    )
+  )
+combined_plot
+```
+
+
+We have `r paste0(round(nrow(below1)/nrow(all_damage)*100, 1),"%)` of the Burn Cost in the range of 0-1%. 
+We also 
+We hypothesize that this is a dilution effect. If true, this effect should become stronger the larger the more fields are insured.
+
+### Dilution Effect on Sum insured
+
+First view:
+
+
+```{r, fig.height=7, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+
+ggplot(all_damage, aes(sum_insured, burn_cost)) +
+  geom_point(color = "olivedrab", alpha = 0.3)+
+labs(title = "Burn x Sum insured")+
+  theme_minimal(base_size = 13)
+
+
+```
+We see no good correlation. But this is not surprising, because the variables are strongly Heteroskedastic  We need to find another way to prove it.
+
+We slice the burn cost by Quantiles of the sum insured. This accounts for the Heteroskedastic distribution. We choose 6 Bins. 
+
+```{r, fig.height=12, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+
+qs <- quantile(all_damage$sum_insured, probs = seq(0, 1, 0.2), na.rm = TRUE)
+dfq <- all_damage %>% 
+  filter(burn_cost > 0) %>% 
+  mutate(quartile = (cut(sum_insured, breaks = qs, labels = paste("sum insured Q", names(qs)[-1]), include.lowest = TRUE)))
+
+dfq%>%
+  ggplot(aes(burn_cost)) +
+  geom_histogram(aes(y = after_stat(density)),
+                 bins = 100, fill = "olivedrab", alpha = 0.3) +
+  facet_wrap(~ quartile, ncol = 1, scales = "free_y") +
+  scale_x_continuous(limits = c(0, 1.01)) +
+  labs(title = "Burn distribution by quartile of sum-insured",
+       x = "burn", y = "cnt") +
+  theme_minimal(base_size = 13)
+
+```
+
+
+Volltreffer. We see that the higher the range of sum insured becomes, the more the gravitational centre of the mass wanders to the left.
+
+We can display this even more visually:
+
+
+```{r, fig.height=8, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+qs <- quantile(all_damage$sum_insured, probs = seq(0, 1, 0.1), na.rm = TRUE)
+p <- all_damage %>% 
+  filter(burn_cost > 0) %>% 
+  mutate(quartile = cut(sum_insured,
+                         breaks = qs,
+                         labels = paste("Q", names(qs)[-1]),
+                         include.lowest = TRUE)) %>%
+  ggplot(aes(x = quartile, y = burn_cost)) +
+  geom_boxplot(fill = "olivedrab3", color = "olivedrab", alpha = 0.6, outlier.size = 3) +
+  scale_y_continuous(limits = c(0, 1.01)) +
+  labs(
+    title = "Dilution effect of burn cost",
+    x = "Sum insured Q",
+    y = "Burn cost"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+p
+
+```
+
+
+
+
+### Dilution Effect on area
+
+First view:
+
+
+```{r, fig.height=7, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+
+area <- RnData::GET_geography("POR", "municipality", return = "sf") %>%
+  mutate(area = as.numeric(sf::st_area(geom))) %>% sf::st_drop_geometry() %>% dplyr::select(municipality_id, area)
+
+all_damage_area <- data %>% drop_na() %>% filter(burn_cost > 0) %>% left_join(area)
+ggplot(all_damage_area, aes(area, burn_cost)) +
+  geom_point(color = "salmon", alpha = 0.3)+
+  labs(title = "Burn x Sum insured")+
+  theme_minimal(base_size = 13)
+
+```
+We see no good correlation. But this is not surprising, because the variables are strongly Heteroskedastic  We need to find another way to prove it.
+
+We slice the burn cost by Quantiles of the sum insured. This accounts for the Heteroskedastic distribution. We choose 6 Bins. 
+
+```{r, fig.height=12, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+
+qs <- quantile(all_damage_area$area, probs = seq(0, 1, 0.2), na.rm = TRUE)
+dfq <- all_damage_area %>% 
+  filter(burn_cost > 0) %>% 
+  mutate(quantile = (cut(area, breaks = qs, labels = paste("area Q", names(qs)[-1]), include.lowest = TRUE)))
+
+dfq%>%
+  ggplot(aes(burn_cost)) +
+  geom_histogram(aes(y = after_stat(density)),
+                 bins = 100, fill = "salmon", alpha = 0.3) +
+  facet_wrap(~ quantile, ncol = 1, scales = "free_y") +
+  scale_x_continuous(limits = c(0, 1.01)) +
+  labs(title = "Burn distribution by quartile of area",
+       x = "burn", y = "cnt") +
+  theme_minimal(base_size = 13)
+
+```
+
+
+Volltreffer. We see that the higher the range of sum insured becomes, the more the gravitational centre of the mass wanders to the left.
+
+We can display this even more visually:
+
+
+```{r, fig.height=8, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+qs <- quantile(all_damage_area$area, probs = seq(0, 1, 0.1), na.rm = TRUE)
+p<-all_damage_area %>% 
+  filter(burn_cost > 0) %>% 
+  mutate(quantile = cut(area,breaks = qs,labels = paste("Q", names(qs)[-1]),include.lowest = TRUE)) %>%
+  ggplot(aes(x = quantile, y = burn_cost)) +
+  geom_boxplot(fill = "salmon", color = "salmon3", alpha = 0.6, outlier.size = 3) +
+  scale_y_continuous(limits = c(0, 1.01)) +
+  labs(
+    title = "Dilution effect of burn cost",
+    x = "Area Q",
+    y = "Burn cost"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+
+p
+
+```
+
+
+
+
+### Behavour of Dilution Effect
+
+There is a strong dilution effect on the sum insured and none or a much weaker on the area.
+Now as we know that there is a dilution effect in place, we can ask how this would look like on a statistics side.
+
+Simulation.
+
+
+Exponential ↔ Gamma (Erlang) linkage
+If each atomic unit of exposure has an Exponential severity distribution (shape = 1, scale = θ),
+
+then the sum of k independent Exponentials is an Erlang(k, θ) distribution, i.e. a special case of Gamma with integer shape = k.
+
+More generally, summing independent Gamma(αᵢ, θ) gives Gamma(∑αᵢ, θ).
+At k = 1 (no dilution), the aggregate is still Exponential.
+
+As k grows (more dilution), shape = k grows, the distribution becomes less skewed, more bell-shaped.
+
+In the limit k→∞ CLT kicks in and the Gamma turns into something approximately Normal (around mean = kθ).
+
+This is exactly the contrary of what i see or not????
+
+So gehts
+1 Feld = Schaden P Exponential mit theta
+n Felder (aggregiert) = Schaden Erlang(alpha=n, theta) -> darum sehe ich immer nur Erlang/Gamma
+da mittelwert schrumpft theta um theta/n
+
+
+
+
+
+
+
+
+
+

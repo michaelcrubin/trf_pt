@@ -1,0 +1,62 @@
+## Take Away {#sec-data-visualization .unnumbered}
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+library(here)
+
+```
+
+### General Performance
+
+None of the tested models fulfilled the expectations. Even though there are significant differences between models, all models show a high portion of events being either over or underestimated by 100% or more.
+
+![](images/performance_1.png)
+
+\
+
+### Exponential Distribution of Errors
+
+The error distribution of the models are not normally distributed. They seem to follow some sort of exponential distribution (Laplace Cauchy etc.) with extremely high Kurtosis. This is a problem, because it means that single events can significantly alter the overall situation and a mean or sd of an observed error distribution is practically meaningless.
+This is consistent with the experience of rain events. Few extreme events like the 2024 Wallis rains can change the entire situation in one instance. Statistical models are unable to capture such extremes.
+
+
+![](images/exponentials.png)
+
+\
+
+### Effect of Aggregation
+
+However, aggregating events over time can heal the above-described problem of exponential distributions. If aggregated over time, errors tend to average out. However, some models converge to a biased value.
+
+![](images/newplot%20(8).png)
+
+\
+
+### Winner Model
+
+It is not easy to pick a winner model. There are many different metrics and models perform differently from location to location. Furthermore, there is a trade-off between precision, bias and generalization.
+
+Based on the Log Bias metric, we can certainly exclude the mb_nems and mb_nmm models. In tendency, the mm_mix and mm_swiss1k are best in precision and the iconeu models have the lowest bias.
+
+![](images/winner.png){width="80%"}
+
+\
+
+### Poor Generalization
+
+Commercial and proprietary models do often have a better performance in terms of precision (namely mm_swiss1k). However, exactly those models have the lowest generalization skills. One example is the mm_swiss1k. It performs well on the MeteoSchweiz stations. However, on the unseen data, it is not only significantly worse, but it also appears to follow a completely different distribution. This appears to be classical problem of model overfitting.
+
+![](images/generalization.png)
+
+\
+
+### Final Apprisal
+
+::: {.callout-tip title="Commercial Tuning?"}
+None of the models is performs fully satisfactory for our use. The main issues are overfittig to the known stations and extremly large individual errors. Furthermore, some locations and models are fully biased and there is no clear explanatory patters (geography etc.). Models which perform better on precision tend to be less generalizable, further underpinning the overfitting argument.
+
+**Conclusion**: we need to learn to work with partially unreliable data.
+
+:::
