@@ -441,63 +441,21 @@ invisible(capture.output(source(here("scripts", "gamma_funcs.R"))))
 
 # ---- parameters---------------------------------------
 
-n_sims <- 50000 # Monte-Carlo rows per exposure
-grid <- tidyr::expand_grid(theta = c(0.01, 0.1, 0.4), k = c(1, 3, 9, 27, 100), n_sims = n_sims) %>%
-  mutate(label = paste(theta, k, as.integer(n_sims), sep="_"))
-plots <- grid %>%purrr::pmap(., .f = run_exp_sim) %>% setNames(grid$label)
 
 
+# define grid and then run it
+grid <- tidyr::expand_grid(theta = c( 0.3), alpha = c(1.3), k = c(27), n_sims = 50, rho = c(0, 0.2, 0.4, 0.6, 0.8, 0.98)) %>%
+  mutate(label = paste(alpha, theta, as.integer(n_sims), k, rho, sep="_"))
+plots <- grid %>%purrr::pmap(., .f = run_gamma_real) %>% setNames(grid$label)
 
-th <- 0.4
+
 combined_plot <- plots %>%
-  keep_at(stringr::str_subset(names(plots), paste0("^",th,"_"))) %>%
   wrap_plots(ncol = 2) +
   plot_annotation(
-    title = paste("Burn Cost zoom by Ranges (theta = ",th,")"),
+    title = paste("REal world"),
     theme = theme(
       plot.title = element_text(hjust = 0.5)
     )
   )
-print(combined_plot)
-
-
-
-th <- 0.1
-combined_plot <- plots %>%
-  keep_at(stringr::str_subset(names(plots), paste0("^",th,"_"))) %>%
-  wrap_plots(ncol = 2) +
-  plot_annotation(
-    title = paste("Burn Cost zoom by Ranges (theta = ",th,")"),
-    theme = theme(
-      plot.title = element_text(hjust = 0.5)
-    )
-  )
-print(combined_plot)
-
-
-
-th <- 0.01
-combined_plot <- plots %>%
-  keep_at(stringr::str_subset(names(plots), paste0("^",th,"_"))) %>%
-  wrap_plots(ncol = 2) +
-  plot_annotation(
-    title = paste("Burn Cost zoom by Ranges (theta = ",th,")"),
-    theme = theme(
-      plot.title = element_text(hjust = 0.5)
-    )
-  )
-print(combined_plot)
-
-
-n_sims <- 50000 
-grid <- tidyr::expand_grid(theta = c(0.1, 0.08, 0.05, 0.025, 0.015, 0.01, 0.008, 0.006, 0.004, 0.002, 0.001), k = c(20), n_sims = n_sims) %>%
-  mutate(label = paste(theta, k, as.integer(n_sims), sep="_"))
-plots <- grid %>%purrr::pmap(., .f = run_exp_sim) %>% setNames(grid$label)
-wrap_plots(plots, ncol = 2) +
-  plot_annotation(
-    title = paste("Growing theta)"),
-    theme = theme(
-      plot.title = element_text(hjust = 0.5)
-    )
-)
+combined_plot
 

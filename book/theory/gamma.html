@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.42">
+<meta name="generator" content="quarto-1.2.335">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -17,12 +17,11 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  margin: 0 0.8em 0.2em -1.6em;
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -33,7 +32,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -47,13 +46,43 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
+    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
   {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -63,10 +92,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="gamma_files/libs/quarto-html/tippy.umd.min.js"></script>
 <script src="gamma_files/libs/quarto-html/anchor.min.js"></script>
 <link href="gamma_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="gamma_files/libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="gamma_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="gamma_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="gamma_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="gamma_files/libs/bootstrap/bootstrap-c0367b04c37547644fece4185067e4a7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="gamma_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 
 
 </head>
@@ -79,22 +108,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-
 <section id="sec-energy-intro" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="sec-energy-intro">Aggretation Effect on Gammas</h2>
-<div class="callout callout-style-default callout-tip callout-titled" title="Exponentials, Erlanf">
+<div class="callout-tip callout callout-style-default callout-captioned">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-title-container flex-fill">
-Exponentials, Erlanf
+<div class="callout-caption-container flex-fill">
+Tip
 </div>
 </div>
-<div class="callout-body-container callout-body">
+<div class="callout-body-container callout-body" title="Exponentials, Erlang">
 <p>None of the models is performs fully satisfactory for our use. The main issues are overfittig to the known stations and extremly large individual errors. Furthermore, some locations and models are fully biased and there is no clear explanatory patters (geography etc.). Models which perform better on precision tend to be less generalizable, further underpinning the overfitting argument.</p>
 <p><strong>Conclusion</strong>: we need to learn to work with partially unreliable data.</p>
 </div>
+</div>
+<div class="cell">
+
 </div>
 <section id="problem-setting" class="level3">
 <h3 class="anchored" data-anchor-id="problem-setting">Problem Setting</h3>
@@ -106,104 +137,559 @@ Exponentials, Erlanf
 <h3 class="anchored" data-anchor-id="theory">Theory</h3>
 <p>An Exponential Exp(1/θ) is a special case of a Gamma(1, θ). In fact, the entire justification of Erlang, which is a special case of Gamma with alpha = int, is the aggregation (sum, mean) of k Exp(1/θ). Hence, we can say that averaging k Exp(1/θ) ⇒ Gamma(k, θ/k). If we hypthesize that the atomic unit of damage does not follow Exp(1/θ), but Gamma(alpha,θ) with some shape parameter alpha, then little changes. k Gamma(alpha,θ) ⇒ Gamma(alpha*k, θ/k).</p>
 </section>
-<section id="simulations" class="level3">
-<h3 class="anchored" data-anchor-id="simulations">Simulations</h3>
+<section id="simulations-exponentials" class="level3">
+<h3 class="anchored" data-anchor-id="simulations-exponentials">Simulations Exponentials</h3>
 <p>We run monte carlo simulations of 50’000 draws of Exp(1/θ). With 50’000 draws we are very close to the theory. We compare the empirical average to the Theoretical Gamma(k, θ/k) (Erlang), which should be the theoretical aggregated distribution. We compare then the theoretical distribution to the empirical average and the Expected value of all Exp(1/θ) to θ.</p>
-<p>We do it for 3 different θ</p>
-<section id="θ-0.5" class="level4">
-<h4 class="anchored" data-anchor-id="θ-0.5">θ = 0.5</h4>
+<p><strong>We do it for 3 different θ:</strong></p>
+<div class="cell">
+
+</div>
 <div class="cell">
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="gamma_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="960"></p>
-</figure>
+<p><img src="gamma_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="960"></p>
 </div>
 </div>
-</div>
-</section>
-<section id="θ-0.1" class="level4">
-<h4 class="anchored" data-anchor-id="θ-0.1">θ = 0.1</h4>
 <div class="cell">
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="gamma_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="960"></p>
-</figure>
+<p><img src="gamma_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="960"></p>
 </div>
 </div>
-</div>
-</section>
-<section id="θ-0.01" class="level4">
-<h4 class="anchored" data-anchor-id="θ-0.01">θ = 0.01</h4>
 <div class="cell">
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="gamma_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="960"></p>
-</figure>
+<p><img src="gamma_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="960"></p>
 </div>
 </div>
-</div>
-</section>
 <section id="why-does-empirical-average-diverge-at-small-theta" class="level4">
 <h4 class="anchored" data-anchor-id="why-does-empirical-average-diverge-at-small-theta">Why does empirical average diverge at small theta</h4>
+<p>We observe a strange behavour of the empirical average (blue). The problem is only the plotting function after_stat(density). Because it uses Gaussian Kerneling, the near-zero Gaussians leak to &lt;0 and hence distort the smoothing function. If you look at a hist of the empirical average, it looks perfectly gamma.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="gamma_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="960"></p>
-</figure>
-</div>
+<p><img src="gamma_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="960"></p>
 </div>
 </div>
 </section>
-<section id="expected-values-and-shapes" class="level4">
-<h4 class="anchored" data-anchor-id="expected-values-and-shapes">Expected Values and Shapes</h4>
+</section>
+<section id="simulations-gammas" class="level3">
+<h3 class="anchored" data-anchor-id="simulations-gammas">Simulations Gammas</h3>
+<p>It is also thinkable that our atomic brun units (fields) follow a gamma distribution with some α &gt; 1, in which case the most likely burn cost will be &gt;0. Thankfully, the aggregation behavour of k Gammas follows the exact same pattern as in the case of Exponentials.</p>
+<p><strong>We do it for 3 different θ and 2 different α:</strong></p>
+<div class="cell">
+
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="gamma_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="960"></p>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="gamma_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="960"></p>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="gamma_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="960"></p>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="gamma_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="960"></p>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="gamma_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="960"></p>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="gamma_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="960"></p>
+</div>
+</div>
+</section>
+<section id="from-theory-to-practice-few-samples" class="level3">
+<h3 class="anchored" data-anchor-id="from-theory-to-practice-few-samples">From Theory to Practice: few samples</h3>
+<p>Until now, we used a monte carlo simulation of 50’000 draws, which means that our empirical observations come asymptotically close to the theory by the LLN. We want to understand now the behaviour of the aggregation with limited data.</p>
+<p><strong>We do it for 3 different θ and 2 different α:</strong></p>
+<div class="cell">
+
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="gamma_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="960"></p>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="gamma_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="960"></p>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="gamma_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="960"></p>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="gamma_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="960"></p>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="gamma_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="960"></p>
+</div>
+</div>
+<section id="aggregation-heals-mean-but-not-variance" class="level4">
+<h4 class="anchored" data-anchor-id="aggregation-heals-mean-but-not-variance">Aggregation heals mean, but not variance</h4>
+<p>In practice, we have only few years of observation (1-5), which is equivalent to our monte carlo with few draws. Our data, however, is composed if a large number of aggregated fields (certainly &gt;100), i.e.&nbsp;k is large. It’s important to note that the aggregation effect heals the mean (given i.i.d.), but NOT the variance.</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="gamma_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="960"></p>
+</div>
+</div>
+<p>Worse even… as we increase k, sd gets smaller, but likely wrong.<strong>Hence we give ourselves a wrong confidence</strong></p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="gamma_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="960"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="dependency-of-fields" class="level3">
+<h3 class="anchored" data-anchor-id="dependency-of-fields">Dependency of Fields</h3>
+<p>Attention. Our fields (ks) are almost certainly not independent. This has an impact on the aggregation behaviour. While they are not 100% dependent, we assume that they have some dependency Rho between 0 and 1. We simulate the</p>
+<p><strong>simulate a selected scenario for 6 different dependencies:</strong></p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Called from: plot_gamma_dependent(draws, emp_average, theory, k, alpha, theta, 
+    n_sims, rho)
+debug: mean_emp &lt;- mean(emp_average$value)
+debug: sd_emp &lt;- sd(emp_average$value)
+debug: mean_theory &lt;- theta * alpha
+debug: sd_theory &lt;- sqrt(alpha) * theta * (rho + (1 - rho)/sqrt(k))
+debug: mx_y &lt;- theory$pdf %&gt;% max()
+debug: sd_delta = (sd_emp - sd_theory)/sd_theory
+debug: p &lt;- ggplot() + geom_freqpoly(data = atom_long, aes(value, after_stat(density), 
+    group = id, colour = "k Fields Gamma(α,θ)"), binwidth = theta/50, 
+    size = 0.2, show.legend = TRUE) + geom_density(data = emp_average, 
+    aes(value, after_stat(density), colour = "Empirical avg"), 
+    size = 1, show.legend = TRUE) + geom_line(data = theory, 
+    aes(x, pdf, colour = "Gamma MM"), size = 1, show.legend = TRUE) + 
+    geom_vline(aes(xintercept = mean_emp, colour = "Mean Draws"), 
+        linetype = "dashed", size = 1) + geom_vline(aes(xintercept = mean_theory, 
+    colour = "αθ"), linetype = "dashed", size = 1) + annotate("text", 
+    x = theta * 2, y = mx_y, label = paste("sd empirical:", round(sd_emp, 
+        3), "\nsd theory:", round(sd_theory, 3), "\nDelta:", 
+        round(sd_delta * 100, 0), "%"), hjust = 0, vjust = 1, 
+    size = 4, fontface = "italic") + scale_colour_manual(name = "", 
+    values = c(`k Fields Gamma(α,θ)` = "grey70", `Empirical avg` = "steelblue", 
+        `Gamma MM` = "red", `Mean Draws` = "darkgray", αθ = "darkred")) + 
+    coord_cartesian(xlim = c(0, theta * 5), ylim = c(0, mx_y * 
+        2)) + labs(title = paste0("Aggreg k=", k, " Fields Gamma(", 
+    alpha, ",", theta, ") Rho =", rho), subtitle = paste0("Simulated ", 
+    n_sims, " years"), x = "Burn", y = "density") + theme_minimal()
+debug: p
+debug: return(p)
+Called from: plot_gamma_dependent(draws, emp_average, theory, k, alpha, theta, 
+    n_sims, rho)
+debug: mean_emp &lt;- mean(emp_average$value)
+debug: sd_emp &lt;- sd(emp_average$value)
+debug: mean_theory &lt;- theta * alpha
+debug: sd_theory &lt;- sqrt(alpha) * theta * (rho + (1 - rho)/sqrt(k))
+debug: mx_y &lt;- theory$pdf %&gt;% max()
+debug: sd_delta = (sd_emp - sd_theory)/sd_theory
+debug: p &lt;- ggplot() + geom_freqpoly(data = atom_long, aes(value, after_stat(density), 
+    group = id, colour = "k Fields Gamma(α,θ)"), binwidth = theta/50, 
+    size = 0.2, show.legend = TRUE) + geom_density(data = emp_average, 
+    aes(value, after_stat(density), colour = "Empirical avg"), 
+    size = 1, show.legend = TRUE) + geom_line(data = theory, 
+    aes(x, pdf, colour = "Gamma MM"), size = 1, show.legend = TRUE) + 
+    geom_vline(aes(xintercept = mean_emp, colour = "Mean Draws"), 
+        linetype = "dashed", size = 1) + geom_vline(aes(xintercept = mean_theory, 
+    colour = "αθ"), linetype = "dashed", size = 1) + annotate("text", 
+    x = theta * 2, y = mx_y, label = paste("sd empirical:", round(sd_emp, 
+        3), "\nsd theory:", round(sd_theory, 3), "\nDelta:", 
+        round(sd_delta * 100, 0), "%"), hjust = 0, vjust = 1, 
+    size = 4, fontface = "italic") + scale_colour_manual(name = "", 
+    values = c(`k Fields Gamma(α,θ)` = "grey70", `Empirical avg` = "steelblue", 
+        `Gamma MM` = "red", `Mean Draws` = "darkgray", αθ = "darkred")) + 
+    coord_cartesian(xlim = c(0, theta * 5), ylim = c(0, mx_y * 
+        2)) + labs(title = paste0("Aggreg k=", k, " Fields Gamma(", 
+    alpha, ",", theta, ") Rho =", rho), subtitle = paste0("Simulated ", 
+    n_sims, " years"), x = "Burn", y = "density") + theme_minimal()
+debug: p
+debug: return(p)
+Called from: plot_gamma_dependent(draws, emp_average, theory, k, alpha, theta, 
+    n_sims, rho)
+debug: mean_emp &lt;- mean(emp_average$value)
+debug: sd_emp &lt;- sd(emp_average$value)
+debug: mean_theory &lt;- theta * alpha
+debug: sd_theory &lt;- sqrt(alpha) * theta * (rho + (1 - rho)/sqrt(k))
+debug: mx_y &lt;- theory$pdf %&gt;% max()
+debug: sd_delta = (sd_emp - sd_theory)/sd_theory
+debug: p &lt;- ggplot() + geom_freqpoly(data = atom_long, aes(value, after_stat(density), 
+    group = id, colour = "k Fields Gamma(α,θ)"), binwidth = theta/50, 
+    size = 0.2, show.legend = TRUE) + geom_density(data = emp_average, 
+    aes(value, after_stat(density), colour = "Empirical avg"), 
+    size = 1, show.legend = TRUE) + geom_line(data = theory, 
+    aes(x, pdf, colour = "Gamma MM"), size = 1, show.legend = TRUE) + 
+    geom_vline(aes(xintercept = mean_emp, colour = "Mean Draws"), 
+        linetype = "dashed", size = 1) + geom_vline(aes(xintercept = mean_theory, 
+    colour = "αθ"), linetype = "dashed", size = 1) + annotate("text", 
+    x = theta * 2, y = mx_y, label = paste("sd empirical:", round(sd_emp, 
+        3), "\nsd theory:", round(sd_theory, 3), "\nDelta:", 
+        round(sd_delta * 100, 0), "%"), hjust = 0, vjust = 1, 
+    size = 4, fontface = "italic") + scale_colour_manual(name = "", 
+    values = c(`k Fields Gamma(α,θ)` = "grey70", `Empirical avg` = "steelblue", 
+        `Gamma MM` = "red", `Mean Draws` = "darkgray", αθ = "darkred")) + 
+    coord_cartesian(xlim = c(0, theta * 5), ylim = c(0, mx_y * 
+        2)) + labs(title = paste0("Aggreg k=", k, " Fields Gamma(", 
+    alpha, ",", theta, ") Rho =", rho), subtitle = paste0("Simulated ", 
+    n_sims, " years"), x = "Burn", y = "density") + theme_minimal()
+debug: p
+debug: return(p)
+Called from: plot_gamma_dependent(draws, emp_average, theory, k, alpha, theta, 
+    n_sims, rho)
+debug: mean_emp &lt;- mean(emp_average$value)
+debug: sd_emp &lt;- sd(emp_average$value)
+debug: mean_theory &lt;- theta * alpha
+debug: sd_theory &lt;- sqrt(alpha) * theta * (rho + (1 - rho)/sqrt(k))
+debug: mx_y &lt;- theory$pdf %&gt;% max()
+debug: sd_delta = (sd_emp - sd_theory)/sd_theory
+debug: p &lt;- ggplot() + geom_freqpoly(data = atom_long, aes(value, after_stat(density), 
+    group = id, colour = "k Fields Gamma(α,θ)"), binwidth = theta/50, 
+    size = 0.2, show.legend = TRUE) + geom_density(data = emp_average, 
+    aes(value, after_stat(density), colour = "Empirical avg"), 
+    size = 1, show.legend = TRUE) + geom_line(data = theory, 
+    aes(x, pdf, colour = "Gamma MM"), size = 1, show.legend = TRUE) + 
+    geom_vline(aes(xintercept = mean_emp, colour = "Mean Draws"), 
+        linetype = "dashed", size = 1) + geom_vline(aes(xintercept = mean_theory, 
+    colour = "αθ"), linetype = "dashed", size = 1) + annotate("text", 
+    x = theta * 2, y = mx_y, label = paste("sd empirical:", round(sd_emp, 
+        3), "\nsd theory:", round(sd_theory, 3), "\nDelta:", 
+        round(sd_delta * 100, 0), "%"), hjust = 0, vjust = 1, 
+    size = 4, fontface = "italic") + scale_colour_manual(name = "", 
+    values = c(`k Fields Gamma(α,θ)` = "grey70", `Empirical avg` = "steelblue", 
+        `Gamma MM` = "red", `Mean Draws` = "darkgray", αθ = "darkred")) + 
+    coord_cartesian(xlim = c(0, theta * 5), ylim = c(0, mx_y * 
+        2)) + labs(title = paste0("Aggreg k=", k, " Fields Gamma(", 
+    alpha, ",", theta, ") Rho =", rho), subtitle = paste0("Simulated ", 
+    n_sims, " years"), x = "Burn", y = "density") + theme_minimal()
+debug: p
+debug: return(p)
+Called from: plot_gamma_dependent(draws, emp_average, theory, k, alpha, theta, 
+    n_sims, rho)
+debug: mean_emp &lt;- mean(emp_average$value)
+debug: sd_emp &lt;- sd(emp_average$value)
+debug: mean_theory &lt;- theta * alpha
+debug: sd_theory &lt;- sqrt(alpha) * theta * (rho + (1 - rho)/sqrt(k))
+debug: mx_y &lt;- theory$pdf %&gt;% max()
+debug: sd_delta = (sd_emp - sd_theory)/sd_theory
+debug: p &lt;- ggplot() + geom_freqpoly(data = atom_long, aes(value, after_stat(density), 
+    group = id, colour = "k Fields Gamma(α,θ)"), binwidth = theta/50, 
+    size = 0.2, show.legend = TRUE) + geom_density(data = emp_average, 
+    aes(value, after_stat(density), colour = "Empirical avg"), 
+    size = 1, show.legend = TRUE) + geom_line(data = theory, 
+    aes(x, pdf, colour = "Gamma MM"), size = 1, show.legend = TRUE) + 
+    geom_vline(aes(xintercept = mean_emp, colour = "Mean Draws"), 
+        linetype = "dashed", size = 1) + geom_vline(aes(xintercept = mean_theory, 
+    colour = "αθ"), linetype = "dashed", size = 1) + annotate("text", 
+    x = theta * 2, y = mx_y, label = paste("sd empirical:", round(sd_emp, 
+        3), "\nsd theory:", round(sd_theory, 3), "\nDelta:", 
+        round(sd_delta * 100, 0), "%"), hjust = 0, vjust = 1, 
+    size = 4, fontface = "italic") + scale_colour_manual(name = "", 
+    values = c(`k Fields Gamma(α,θ)` = "grey70", `Empirical avg` = "steelblue", 
+        `Gamma MM` = "red", `Mean Draws` = "darkgray", αθ = "darkred")) + 
+    coord_cartesian(xlim = c(0, theta * 5), ylim = c(0, mx_y * 
+        2)) + labs(title = paste0("Aggreg k=", k, " Fields Gamma(", 
+    alpha, ",", theta, ") Rho =", rho), subtitle = paste0("Simulated ", 
+    n_sims, " years"), x = "Burn", y = "density") + theme_minimal()
+debug: p
+debug: return(p)
+Called from: plot_gamma_dependent(draws, emp_average, theory, k, alpha, theta, 
+    n_sims, rho)
+debug: mean_emp &lt;- mean(emp_average$value)
+debug: sd_emp &lt;- sd(emp_average$value)
+debug: mean_theory &lt;- theta * alpha
+debug: sd_theory &lt;- sqrt(alpha) * theta * (rho + (1 - rho)/sqrt(k))
+debug: mx_y &lt;- theory$pdf %&gt;% max()
+debug: sd_delta = (sd_emp - sd_theory)/sd_theory
+debug: p &lt;- ggplot() + geom_freqpoly(data = atom_long, aes(value, after_stat(density), 
+    group = id, colour = "k Fields Gamma(α,θ)"), binwidth = theta/50, 
+    size = 0.2, show.legend = TRUE) + geom_density(data = emp_average, 
+    aes(value, after_stat(density), colour = "Empirical avg"), 
+    size = 1, show.legend = TRUE) + geom_line(data = theory, 
+    aes(x, pdf, colour = "Gamma MM"), size = 1, show.legend = TRUE) + 
+    geom_vline(aes(xintercept = mean_emp, colour = "Mean Draws"), 
+        linetype = "dashed", size = 1) + geom_vline(aes(xintercept = mean_theory, 
+    colour = "αθ"), linetype = "dashed", size = 1) + annotate("text", 
+    x = theta * 2, y = mx_y, label = paste("sd empirical:", round(sd_emp, 
+        3), "\nsd theory:", round(sd_theory, 3), "\nDelta:", 
+        round(sd_delta * 100, 0), "%"), hjust = 0, vjust = 1, 
+    size = 4, fontface = "italic") + scale_colour_manual(name = "", 
+    values = c(`k Fields Gamma(α,θ)` = "grey70", `Empirical avg` = "steelblue", 
+        `Gamma MM` = "red", `Mean Draws` = "darkgray", αθ = "darkred")) + 
+    coord_cartesian(xlim = c(0, theta * 5), ylim = c(0, mx_y * 
+        2)) + labs(title = paste0("Aggreg k=", k, " Fields Gamma(", 
+    alpha, ",", theta, ") Rho =", rho), subtitle = paste0("Simulated ", 
+    n_sims, " years"), x = "Burn", y = "density") + theme_minimal()
+debug: p
+debug: return(p)</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="gamma_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="some-real-world-scenario" class="level3">
+<h3 class="anchored" data-anchor-id="some-real-world-scenario">Some Real world scenario</h3>
+<p>The real world with low years and dependency</p>
+<p><strong>simulate a selected scenario for 6 different dependencies:</strong></p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Called from: plot_gamma_dependent(draws, emp_average, theory, k, alpha, theta, 
+    n_sims, rho)
+debug: mean_emp &lt;- mean(emp_average$value)
+debug: sd_emp &lt;- sd(emp_average$value)
+debug: mean_theory &lt;- theta * alpha
+debug: sd_theory &lt;- sqrt(alpha) * theta * (rho + (1 - rho)/sqrt(k))
+debug: mx_y &lt;- theory$pdf %&gt;% max()
+debug: sd_delta = (sd_emp - sd_theory)/sd_theory
+debug: p &lt;- ggplot() + geom_freqpoly(data = atom_long, aes(value, after_stat(density), 
+    group = id, colour = "k Fields Gamma(α,θ)"), binwidth = theta/50, 
+    size = 0.2, show.legend = TRUE) + geom_density(data = emp_average, 
+    aes(value, after_stat(density), colour = "Empirical avg"), 
+    size = 1, show.legend = TRUE) + geom_line(data = theory, 
+    aes(x, pdf, colour = "Gamma MM"), size = 1, show.legend = TRUE) + 
+    geom_vline(aes(xintercept = mean_emp, colour = "Mean Draws"), 
+        linetype = "dashed", size = 1) + geom_vline(aes(xintercept = mean_theory, 
+    colour = "αθ"), linetype = "dashed", size = 1) + annotate("text", 
+    x = theta * 2, y = mx_y, label = paste("sd empirical:", round(sd_emp, 
+        3), "\nsd theory:", round(sd_theory, 3), "\nDelta:", 
+        round(sd_delta * 100, 0), "%"), hjust = 0, vjust = 1, 
+    size = 4, fontface = "italic") + scale_colour_manual(name = "", 
+    values = c(`k Fields Gamma(α,θ)` = "grey70", `Empirical avg` = "steelblue", 
+        `Gamma MM` = "red", `Mean Draws` = "darkgray", αθ = "darkred")) + 
+    coord_cartesian(xlim = c(0, theta * 5), ylim = c(0, mx_y * 
+        2)) + labs(title = paste0("Aggreg k=", k, " Fields Gamma(", 
+    alpha, ",", theta, ") Rho =", rho), subtitle = paste0("Simulated ", 
+    n_sims, " years"), x = "Burn", y = "density") + theme_minimal()
+debug: p
+debug: return(p)
+Called from: plot_gamma_dependent(draws, emp_average, theory, k, alpha, theta, 
+    n_sims, rho)
+debug: mean_emp &lt;- mean(emp_average$value)
+debug: sd_emp &lt;- sd(emp_average$value)
+debug: mean_theory &lt;- theta * alpha
+debug: sd_theory &lt;- sqrt(alpha) * theta * (rho + (1 - rho)/sqrt(k))
+debug: mx_y &lt;- theory$pdf %&gt;% max()
+debug: sd_delta = (sd_emp - sd_theory)/sd_theory
+debug: p &lt;- ggplot() + geom_freqpoly(data = atom_long, aes(value, after_stat(density), 
+    group = id, colour = "k Fields Gamma(α,θ)"), binwidth = theta/50, 
+    size = 0.2, show.legend = TRUE) + geom_density(data = emp_average, 
+    aes(value, after_stat(density), colour = "Empirical avg"), 
+    size = 1, show.legend = TRUE) + geom_line(data = theory, 
+    aes(x, pdf, colour = "Gamma MM"), size = 1, show.legend = TRUE) + 
+    geom_vline(aes(xintercept = mean_emp, colour = "Mean Draws"), 
+        linetype = "dashed", size = 1) + geom_vline(aes(xintercept = mean_theory, 
+    colour = "αθ"), linetype = "dashed", size = 1) + annotate("text", 
+    x = theta * 2, y = mx_y, label = paste("sd empirical:", round(sd_emp, 
+        3), "\nsd theory:", round(sd_theory, 3), "\nDelta:", 
+        round(sd_delta * 100, 0), "%"), hjust = 0, vjust = 1, 
+    size = 4, fontface = "italic") + scale_colour_manual(name = "", 
+    values = c(`k Fields Gamma(α,θ)` = "grey70", `Empirical avg` = "steelblue", 
+        `Gamma MM` = "red", `Mean Draws` = "darkgray", αθ = "darkred")) + 
+    coord_cartesian(xlim = c(0, theta * 5), ylim = c(0, mx_y * 
+        2)) + labs(title = paste0("Aggreg k=", k, " Fields Gamma(", 
+    alpha, ",", theta, ") Rho =", rho), subtitle = paste0("Simulated ", 
+    n_sims, " years"), x = "Burn", y = "density") + theme_minimal()
+debug: p
+debug: return(p)
+Called from: plot_gamma_dependent(draws, emp_average, theory, k, alpha, theta, 
+    n_sims, rho)
+debug: mean_emp &lt;- mean(emp_average$value)
+debug: sd_emp &lt;- sd(emp_average$value)
+debug: mean_theory &lt;- theta * alpha
+debug: sd_theory &lt;- sqrt(alpha) * theta * (rho + (1 - rho)/sqrt(k))
+debug: mx_y &lt;- theory$pdf %&gt;% max()
+debug: sd_delta = (sd_emp - sd_theory)/sd_theory
+debug: p &lt;- ggplot() + geom_freqpoly(data = atom_long, aes(value, after_stat(density), 
+    group = id, colour = "k Fields Gamma(α,θ)"), binwidth = theta/50, 
+    size = 0.2, show.legend = TRUE) + geom_density(data = emp_average, 
+    aes(value, after_stat(density), colour = "Empirical avg"), 
+    size = 1, show.legend = TRUE) + geom_line(data = theory, 
+    aes(x, pdf, colour = "Gamma MM"), size = 1, show.legend = TRUE) + 
+    geom_vline(aes(xintercept = mean_emp, colour = "Mean Draws"), 
+        linetype = "dashed", size = 1) + geom_vline(aes(xintercept = mean_theory, 
+    colour = "αθ"), linetype = "dashed", size = 1) + annotate("text", 
+    x = theta * 2, y = mx_y, label = paste("sd empirical:", round(sd_emp, 
+        3), "\nsd theory:", round(sd_theory, 3), "\nDelta:", 
+        round(sd_delta * 100, 0), "%"), hjust = 0, vjust = 1, 
+    size = 4, fontface = "italic") + scale_colour_manual(name = "", 
+    values = c(`k Fields Gamma(α,θ)` = "grey70", `Empirical avg` = "steelblue", 
+        `Gamma MM` = "red", `Mean Draws` = "darkgray", αθ = "darkred")) + 
+    coord_cartesian(xlim = c(0, theta * 5), ylim = c(0, mx_y * 
+        2)) + labs(title = paste0("Aggreg k=", k, " Fields Gamma(", 
+    alpha, ",", theta, ") Rho =", rho), subtitle = paste0("Simulated ", 
+    n_sims, " years"), x = "Burn", y = "density") + theme_minimal()
+debug: p
+debug: return(p)
+Called from: plot_gamma_dependent(draws, emp_average, theory, k, alpha, theta, 
+    n_sims, rho)
+debug: mean_emp &lt;- mean(emp_average$value)
+debug: sd_emp &lt;- sd(emp_average$value)
+debug: mean_theory &lt;- theta * alpha
+debug: sd_theory &lt;- sqrt(alpha) * theta * (rho + (1 - rho)/sqrt(k))
+debug: mx_y &lt;- theory$pdf %&gt;% max()
+debug: sd_delta = (sd_emp - sd_theory)/sd_theory
+debug: p &lt;- ggplot() + geom_freqpoly(data = atom_long, aes(value, after_stat(density), 
+    group = id, colour = "k Fields Gamma(α,θ)"), binwidth = theta/50, 
+    size = 0.2, show.legend = TRUE) + geom_density(data = emp_average, 
+    aes(value, after_stat(density), colour = "Empirical avg"), 
+    size = 1, show.legend = TRUE) + geom_line(data = theory, 
+    aes(x, pdf, colour = "Gamma MM"), size = 1, show.legend = TRUE) + 
+    geom_vline(aes(xintercept = mean_emp, colour = "Mean Draws"), 
+        linetype = "dashed", size = 1) + geom_vline(aes(xintercept = mean_theory, 
+    colour = "αθ"), linetype = "dashed", size = 1) + annotate("text", 
+    x = theta * 2, y = mx_y, label = paste("sd empirical:", round(sd_emp, 
+        3), "\nsd theory:", round(sd_theory, 3), "\nDelta:", 
+        round(sd_delta * 100, 0), "%"), hjust = 0, vjust = 1, 
+    size = 4, fontface = "italic") + scale_colour_manual(name = "", 
+    values = c(`k Fields Gamma(α,θ)` = "grey70", `Empirical avg` = "steelblue", 
+        `Gamma MM` = "red", `Mean Draws` = "darkgray", αθ = "darkred")) + 
+    coord_cartesian(xlim = c(0, theta * 5), ylim = c(0, mx_y * 
+        2)) + labs(title = paste0("Aggreg k=", k, " Fields Gamma(", 
+    alpha, ",", theta, ") Rho =", rho), subtitle = paste0("Simulated ", 
+    n_sims, " years"), x = "Burn", y = "density") + theme_minimal()
+debug: p
+debug: return(p)
+Called from: plot_gamma_dependent(draws, emp_average, theory, k, alpha, theta, 
+    n_sims, rho)
+debug: mean_emp &lt;- mean(emp_average$value)
+debug: sd_emp &lt;- sd(emp_average$value)
+debug: mean_theory &lt;- theta * alpha
+debug: sd_theory &lt;- sqrt(alpha) * theta * (rho + (1 - rho)/sqrt(k))
+debug: mx_y &lt;- theory$pdf %&gt;% max()
+debug: sd_delta = (sd_emp - sd_theory)/sd_theory
+debug: p &lt;- ggplot() + geom_freqpoly(data = atom_long, aes(value, after_stat(density), 
+    group = id, colour = "k Fields Gamma(α,θ)"), binwidth = theta/50, 
+    size = 0.2, show.legend = TRUE) + geom_density(data = emp_average, 
+    aes(value, after_stat(density), colour = "Empirical avg"), 
+    size = 1, show.legend = TRUE) + geom_line(data = theory, 
+    aes(x, pdf, colour = "Gamma MM"), size = 1, show.legend = TRUE) + 
+    geom_vline(aes(xintercept = mean_emp, colour = "Mean Draws"), 
+        linetype = "dashed", size = 1) + geom_vline(aes(xintercept = mean_theory, 
+    colour = "αθ"), linetype = "dashed", size = 1) + annotate("text", 
+    x = theta * 2, y = mx_y, label = paste("sd empirical:", round(sd_emp, 
+        3), "\nsd theory:", round(sd_theory, 3), "\nDelta:", 
+        round(sd_delta * 100, 0), "%"), hjust = 0, vjust = 1, 
+    size = 4, fontface = "italic") + scale_colour_manual(name = "", 
+    values = c(`k Fields Gamma(α,θ)` = "grey70", `Empirical avg` = "steelblue", 
+        `Gamma MM` = "red", `Mean Draws` = "darkgray", αθ = "darkred")) + 
+    coord_cartesian(xlim = c(0, theta * 5), ylim = c(0, mx_y * 
+        2)) + labs(title = paste0("Aggreg k=", k, " Fields Gamma(", 
+    alpha, ",", theta, ") Rho =", rho), subtitle = paste0("Simulated ", 
+    n_sims, " years"), x = "Burn", y = "density") + theme_minimal()
+debug: p
+debug: return(p)
+Called from: plot_gamma_dependent(draws, emp_average, theory, k, alpha, theta, 
+    n_sims, rho)
+debug: mean_emp &lt;- mean(emp_average$value)
+debug: sd_emp &lt;- sd(emp_average$value)
+debug: mean_theory &lt;- theta * alpha
+debug: sd_theory &lt;- sqrt(alpha) * theta * (rho + (1 - rho)/sqrt(k))
+debug: mx_y &lt;- theory$pdf %&gt;% max()
+debug: sd_delta = (sd_emp - sd_theory)/sd_theory
+debug: p &lt;- ggplot() + geom_freqpoly(data = atom_long, aes(value, after_stat(density), 
+    group = id, colour = "k Fields Gamma(α,θ)"), binwidth = theta/50, 
+    size = 0.2, show.legend = TRUE) + geom_density(data = emp_average, 
+    aes(value, after_stat(density), colour = "Empirical avg"), 
+    size = 1, show.legend = TRUE) + geom_line(data = theory, 
+    aes(x, pdf, colour = "Gamma MM"), size = 1, show.legend = TRUE) + 
+    geom_vline(aes(xintercept = mean_emp, colour = "Mean Draws"), 
+        linetype = "dashed", size = 1) + geom_vline(aes(xintercept = mean_theory, 
+    colour = "αθ"), linetype = "dashed", size = 1) + annotate("text", 
+    x = theta * 2, y = mx_y, label = paste("sd empirical:", round(sd_emp, 
+        3), "\nsd theory:", round(sd_theory, 3), "\nDelta:", 
+        round(sd_delta * 100, 0), "%"), hjust = 0, vjust = 1, 
+    size = 4, fontface = "italic") + scale_colour_manual(name = "", 
+    values = c(`k Fields Gamma(α,θ)` = "grey70", `Empirical avg` = "steelblue", 
+        `Gamma MM` = "red", `Mean Draws` = "darkgray", αθ = "darkred")) + 
+    coord_cartesian(xlim = c(0, theta * 5), ylim = c(0, mx_y * 
+        2)) + labs(title = paste0("Aggreg k=", k, " Fields Gamma(", 
+    alpha, ",", theta, ") Rho =", rho), subtitle = paste0("Simulated ", 
+    n_sims, " years"), x = "Burn", y = "density") + theme_minimal()
+debug: p
+debug: return(p)</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="gamma_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="take-aways-how-gammas-behave-in-our-setting" class="level3">
+<h3 class="anchored" data-anchor-id="take-aways-how-gammas-behave-in-our-setting">Take aways: How Gammas Behave in our setting</h3>
 <p>There is one very interesting mechanism to be understood. When Averaging k Gamma(α, θ) (or Exp(1/θ)), then by linearity of Expectation, E[X] of the k aggregated Gammas Gamma(αk, θ/k) remains the same as E[X] of 1 Gamma(α, θ). Obvious as k cancels out. However, the speciality of Gamma is that the shape parameter changes.</p>
 <p>That’s why the Gamma example is interesting: it visibly illustrates how aggregation alters shape while preserving the mean.</p>
+</section>
+<section id="our-setting" class="level3">
+<h3 class="anchored" data-anchor-id="our-setting">Our Setting</h3>
+<p>Atomic unit = one insured field in one given year; its burn follows Exp(1/θ).</p>
+<p>Region in one year = average of k such fields ⇒ Gamma(k, θ/k) burn.</p>
+<p>Realisations(n_sims) = different years (or seasons); each year you draw a fresh Exp(θ) for every field.</p>
+<div class="cell">
+
+</div>
 <p>The Gamma distribution in plain language What is it? A flexible curve for positive quantities (0 to ∞) that can look like a steep exponential, a gentle hump, or almost a bell—depending on two knobs. The two knobs • Shape (k) = how many “little pieces” add up. • Scale (θ) = average size of each piece. Mean = k θ, Variance = k θ². Everyday analogy Imagine a project that needs k independent mini-tasks, each taking a random time that averages θ days. Total duration = sum of those mini-tasks → that total is Gamma-shaped. Special cases • k = 1 ⇒ Exponential (memory-less waiting-time). • k = ½, θ = 2 ⇒ χ²(1). Large k ⇒ looks Normal (central-limit effect). Natural phenomena it matches – Total rainfall from many showers – Aggregate earthquake energy – Time until k failures in a machine – Insurance claim severity (right-skewed, non-negative) – Queueing/telecom traffic bursts Why actuaries &amp; engineers like it<br>
 ✅ Always non-negative  ✅ Closed-form mean/variance ✅ Simple additive property: if scale is equal, sums stay Gamma (handy for aggregation). Visual cheat-sheet • k &lt; 1 → spike near zero, heavy right tail (almost Exponential). • k ≈ 2–4 → single hump, moderate skew (looks like your burn-rate interior). • k ≫ 10 → nearly symmetric, nudging toward Normal. When to reach for it 1. Data are positive and skewed right. 2. Variability seems proportional to the square of the mean (variance grows with mean²). 3. You model a sum of identical Exponentials (waiting for the k-th event).</p>
 </section>
-</section>
 <section id="only-the-positive-gammas" class="level3">
 <h3 class="anchored" data-anchor-id="only-the-positive-gammas">Only the positive gammas</h3>
+<div class="cell">
+
+</div>
 </section>
 <section id="only-the-zero-gammas" class="level3">
 <h3 class="anchored" data-anchor-id="only-the-zero-gammas">Only the zero gammas</h3>
+<div class="cell">
+
+</div>
 </section>
 <section id="only-the-5050-mix-gammas" class="level3">
 <h3 class="anchored" data-anchor-id="only-the-5050-mix-gammas">Only the 5050 mix gammas</h3>
+<div class="cell">
+
+</div>
 </section>
 <section id="only-the-20-80-mix-gammas" class="level3">
 <h3 class="anchored" data-anchor-id="only-the-20-80-mix-gammas">Only the 20 80 mix gammas</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># set.seed(123)</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># k &lt;- 10 # components per observation</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># n_zero &lt;- 8 # how many “small” Gammas</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># m &lt;- 5000 # sample size</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># # small-Gamma params</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># shape0 &lt;- 0.6</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># scale0 &lt;- 0.05</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># # positive-Gamma params</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># shape1 &lt;- 3</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># scale1 &lt;- 0.4</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># sim &lt;- sim_mix(k, n_zero, m, shape0, scale0, shape1, scale1)</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># par_mm &lt;- mom_gamma(n_zero, k, shape0, scale0, shape1, scale1)</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># par_mle &lt;- fit_gamma_mle(sim$mix)</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co"># ks_mm  &lt;- ks.test(sim$mix, "pgamma", shape = par_mm["shape"], scale = par_mm["scale"])</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># ks_mle &lt;- ks.test(sim$mix, "pgamma", shape = par_mle["shape"], scale = par_mle["scale"])</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co"># cat("KS p-value (moment-match) :", ks_mm$p.value, "\n")</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co"># cat("KS p-value (MLE fit)     :", ks_mle$p.value, "\n\n")</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co"># p &lt;- plot_gammas(sim, par_mm, par_mle, ks_mm, ks_mle)</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co"># p</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># set.seed(123)</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># k &lt;- 10 # components per observation</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># n_zero &lt;- 8 # how many “small” Gammas</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># m &lt;- 5000 # sample size</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># # small-Gamma params</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># shape0 &lt;- 0.6</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># scale0 &lt;- 0.05</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># # positive-Gamma params</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co"># shape1 &lt;- 3</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co"># scale1 &lt;- 0.4</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co"># sim &lt;- sim_mix(k, n_zero, m, shape0, scale0, shape1, scale1)</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co"># par_mm &lt;- mom_gamma(n_zero, k, shape0, scale0, shape1, scale1)</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co"># par_mle &lt;- fit_gamma_mle(sim$mix)</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co"># ks_mm  &lt;- ks.test(sim$mix, "pgamma", shape = par_mm["shape"], scale = par_mm["scale"])</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co"># ks_mle &lt;- ks.test(sim$mix, "pgamma", shape = par_mle["shape"], scale = par_mle["scale"])</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="co"># cat("KS p-value (moment-match) :", ks_mm$p.value, "\n")</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="co"># cat("KS p-value (MLE fit)     :", ks_mle$p.value, "\n\n")</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co"># p &lt;- plot_gammas(sim, par_mm, par_mle, ks_mm, ks_mle)</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="co"># p</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="update-process-on-a-discrete-distribution" class="level3">
@@ -240,15 +726,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
-  const isCodeAnnotation = (el) => {
-    for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
-        return true;
-      }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
     }
-    return false;
-  }
-  const onCopySuccess = function(e) {
+  });
+  clipboard.on('success', function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -280,48 +763,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
-  }
-  const getTextToCopy = function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-    text: getTextToCopy
   });
-  clipboard.on('success', onCopySuccess);
-  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-      text: getTextToCopy,
-      container: window.document.getElementById('quarto-embedded-source-code-modal')
-    });
-    clipboardModal.on('success', onCopySuccess);
-  }
-    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-    var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
-    var isInternal = (href) => {
-        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
-    }
-    // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
-    for (var i=0; i<links.length; i++) {
-      const link = links[i];
-      if (!isInternal(link.href)) {
-        // undo the damage that might have been done by quarto-nav.js in the case of
-        // links that we want to consider external
-        if (link.dataset.originalHref !== undefined) {
-          link.href = link.dataset.originalHref;
-        }
-      }
-    }
-  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+  function tippyHover(el, contentFn) {
     const config = {
       allowHTML: true,
+      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -331,17 +777,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start',
+      placement: 'bottom-start'
     };
-    if (contentFn) {
-      config.content = contentFn;
-    }
-    if (onTriggerFn) {
-      config.onTrigger = onTriggerFn;
-    }
-    if (onUntriggerFn) {
-      config.onUntrigger = onUntriggerFn;
-    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -353,244 +790,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      if (note) {
-        return note.innerHTML;
-      } else {
-        return "";
-      }
+      return note.innerHTML;
     });
   }
-  const xrefs = window.document.querySelectorAll('a.quarto-xref');
-  const processXRef = (id, note) => {
-    // Strip column container classes
-    const stripColumnClz = (el) => {
-      el.classList.remove("page-full", "page-columns");
-      if (el.children) {
-        for (const child of el.children) {
-          stripColumnClz(child);
-        }
-      }
-    }
-    stripColumnClz(note)
-    if (id === null || id.startsWith('sec-')) {
-      // Special case sections, only their first couple elements
-      const container = document.createElement("div");
-      if (note.children && note.children.length > 2) {
-        container.appendChild(note.children[0].cloneNode(true));
-        for (let i = 1; i < note.children.length; i++) {
-          const child = note.children[i];
-          if (child.tagName === "P" && child.innerText === "") {
-            continue;
-          } else {
-            container.appendChild(child.cloneNode(true));
-            break;
-          }
-        }
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(container);
-        }
-        return container.innerHTML
-      } else {
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(note);
-        }
-        return note.innerHTML;
-      }
-    } else {
-      // Remove any anchor links if they are present
-      const anchorLink = note.querySelector('a.anchorjs-link');
-      if (anchorLink) {
-        anchorLink.remove();
-      }
-      if (window.Quarto?.typesetMath) {
-        window.Quarto.typesetMath(note);
-      }
-      if (note.classList.contains("callout")) {
-        return note.outerHTML;
-      } else {
-        return note.innerHTML;
-      }
-    }
-  }
-  for (var i=0; i<xrefs.length; i++) {
-    const xref = xrefs[i];
-    tippyHover(xref, undefined, function(instance) {
-      instance.disable();
-      let url = xref.getAttribute('href');
-      let hash = undefined; 
-      if (url.startsWith('#')) {
-        hash = url;
-      } else {
-        try { hash = new URL(url).hash; } catch {}
-      }
-      if (hash) {
-        const id = hash.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note !== null) {
-          try {
-            const html = processXRef(id, note.cloneNode(true));
-            instance.setContent(html);
-          } finally {
-            instance.enable();
-            instance.show();
-          }
-        } else {
-          // See if we can fetch this
-          fetch(url.split('#')[0])
-          .then(res => res.text())
-          .then(html => {
-            const parser = new DOMParser();
-            const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.getElementById(id);
-            if (note !== null) {
-              const html = processXRef(id, note);
-              instance.setContent(html);
-            } 
-          }).finally(() => {
-            instance.enable();
-            instance.show();
-          });
-        }
-      } else {
-        // See if we can fetch a full url (with no hash to target)
-        // This is a special case and we should probably do some content thinning / targeting
-        fetch(url)
-        .then(res => res.text())
-        .then(html => {
-          const parser = new DOMParser();
-          const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.querySelector('main.content');
-          if (note !== null) {
-            // This should only happen for chapter cross references
-            // (since there is no id in the URL)
-            // remove the first header
-            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-              note.children[0].remove();
-            }
-            const html = processXRef(null, note);
-            instance.setContent(html);
-          } 
-        }).finally(() => {
-          instance.enable();
-          instance.show();
-        });
-      }
-    }, function(instance) {
-    });
-  }
-      let selectedAnnoteEl;
-      const selectorForAnnotation = ( cell, annotation) => {
-        let cellAttr = 'data-code-cell="' + cell + '"';
-        let lineAttr = 'data-code-annotation="' +  annotation + '"';
-        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-        return selector;
-      }
-      const selectCodeLines = (annoteEl) => {
-        const doc = window.document;
-        const targetCell = annoteEl.getAttribute("data-target-cell");
-        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-        const lineIds = lines.map((line) => {
-          return targetCell + "-" + line;
-        })
-        let top = null;
-        let height = null;
-        let parent = null;
-        if (lineIds.length > 0) {
-            //compute the position of the single el (top and bottom and make a div)
-            const el = window.document.getElementById(lineIds[0]);
-            top = el.offsetTop;
-            height = el.offsetHeight;
-            parent = el.parentElement.parentElement;
-          if (lineIds.length > 1) {
-            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-            height = bottom - top;
-          }
-          if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
-            let div = window.document.getElementById("code-annotation-line-highlight");
-            if (div === null) {
-              div = window.document.createElement("div");
-              div.setAttribute("id", "code-annotation-line-highlight");
-              div.style.position = 'absolute';
-              parent.appendChild(div);
-            }
-            div.style.top = top - 2 + "px";
-            div.style.height = height + 4 + "px";
-            div.style.left = 0;
-            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-            if (gutterDiv === null) {
-              gutterDiv = window.document.createElement("div");
-              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-              gutterDiv.style.position = 'absolute';
-              const codeCell = window.document.getElementById(targetCell);
-              const gutter = codeCell.querySelector('.code-annotation-gutter');
-              gutter.appendChild(gutterDiv);
-            }
-            gutterDiv.style.top = top - 2 + "px";
-            gutterDiv.style.height = height + 4 + "px";
-          }
-          selectedAnnoteEl = annoteEl;
-        }
-      };
-      const unselectCodeLines = () => {
-        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-        elementsIds.forEach((elId) => {
-          const div = window.document.getElementById(elId);
-          if (div) {
-            div.remove();
-          }
-        });
-        selectedAnnoteEl = undefined;
-      };
-        // Handle positioning of the toggle
-    window.addEventListener(
-      "resize",
-      throttle(() => {
-        elRect = undefined;
-        if (selectedAnnoteEl) {
-          selectCodeLines(selectedAnnoteEl);
-        }
-      }, 10)
-    );
-    function throttle(fn, ms) {
-    let throttle = false;
-    let timer;
-      return (...args) => {
-        if(!throttle) { // first call gets through
-            fn.apply(this, args);
-            throttle = true;
-        } else { // all the others get throttled
-            if(timer) clearTimeout(timer); // cancel #2
-            timer = setTimeout(() => {
-              fn.apply(this, args);
-              timer = throttle = false;
-            }, ms);
-        }
-      };
-    }
-      // Attach click handler to the DT
-      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-      for (const annoteDlNode of annoteDls) {
-        annoteDlNode.addEventListener('click', (event) => {
-          const clickedEl = event.target;
-          if (clickedEl !== selectedAnnoteEl) {
-            unselectCodeLines();
-            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-            if (activeEl) {
-              activeEl.classList.remove('code-annotation-active');
-            }
-            selectCodeLines(clickedEl);
-            clickedEl.classList.add('code-annotation-active');
-          } else {
-            // Unselect the line
-            unselectCodeLines();
-            clickedEl.classList.remove('code-annotation-active');
-          }
-        });
-      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {
@@ -631,7 +833,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
-
 
 
 
