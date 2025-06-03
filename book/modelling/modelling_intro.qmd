@@ -1,0 +1,18 @@
+## Data Modelling {#sec-data-modelling .unnumbered}
+
+::: {.callout-tip title="Summary"}
+This chapter develops the theoretical framework for modeling highly uncertain, tail-heavy data using aggregated observations. We focus on extreme deviations in the tails and employ Monte Carlo simulations to build a coherent aggregated model.
+:::
+
+\
+\
+
+Because our data is very scarce and concentrated in extremes, we face a dual challenge: (1) the **rare events** in the tail drive the largest damages but are also the most uncertain, and (2) we must build a model using only **aggregated observations**. Tail probabilities become especially unreliable when data is limited, so choosing appropriate distributional forms is critical.
+
+To address these challenges, we propose a theoretical foundation that accounts for extreme tail behavior under aggregation. We will construct an **aggregated model**—one that can reproduce observed summaries and capture the unseen tail risk. Monte Carlo simulations play a central role: by generating many synthetic realizations under candidate distributions, we gain insight into how different assumptions affect tail estimates and overall risk.
+
+---
+
+
+
+

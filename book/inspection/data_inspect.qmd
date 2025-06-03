@@ -1,0 +1,159 @@
+## Data Inspection (Burn) {#sec-data-visualization .unnumbered}
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+library(here)
+invisible(capture.output(source(here("scripts", "global.R"))))
+invisible(capture.output(source(here("scripts", "helpers.R"))))
+
+# prep data
+x <- get_burn()
+data <- get_damage_grid() %>% left_join(x) %>% replace_na(list(burn_cost = 0))
+
+
+```
+
+::: {.callout-tip title="Summary"}
+We begin with an exploratory look at the burn cost data to understand its structure and challenges. This includes assessing the overall distribution, slicing it into interpretable segments, and analyzing patterns across crops and years.
+:::
+
+\
+
+First, we take a look at the raw data - specifically, the **burn cost**, defined as:
+
+
+
+
+
+$$
+burn\_cost = \frac{tot\_claims}{sum\_insured}
+$$
+
+
+This inspection is done at the **municipality--crop** level, exactly as the data is received. The goal is to form an intuitive understanding of the distribution of the brun cost.
+
+---
+
+### Overall Burn Cost Distribution
+
+We first visualize the burn cost across the entire dataset. The distribution is heavily **zero-inflated**, meaning there is a large number of observations with a burn cost of exactly $0$. As this makes the visualization of the none-zero entries impossible, we create 4 different histogram-plots slicing different ranges of x. It's like zooming in.
+
+```{r, fig.height=7, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+
+plot_4_ranges(data)
+
+```
+
+#### Probability by Slice
+
+The table below summarizes how many observations fall into each of the defined burn cost segments. These "slices" are intended to reveal different regimes of behavior in the data:
+
+-   0_zero_inflater: Exactly zero
+-   1_expo_decay: Small positive values ($0 < x < 0.15$)
+-   2_natural_phenomena: Mid-range values ($0.15 < x < 0.99$)
+-   3_damage_ceiling: Values very close to or exactly $1$
+
+```{r, fig.height=7, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+
+
+data %>%
+  mutate(
+    slice = case_when(
+      burn_cost == 0 ~"0_zero_inflater",
+      burn_cost >0 & burn_cost <0.15 ~"1_expo_decay",
+      burn_cost >0.15 & burn_cost < 0.99 ~"2_natural_phenomena",
+      burn_cost > 0.99 ~"3_damage_ceiling",
+      TRUE ~"9_dummy"
+      )
+  ) %>%
+  group_by(slice) %>%
+  summarise(n = n(), .groups = "drop") %>%
+  mutate(percent = round(100*(n / sum(n)), 3)) %>%
+  arrange((slice)) %>%
+  flextable() %>%
+  theme_vanilla() %>%
+  bold(j = c("percent"), bold = TRUE)
+```
+
+### Crop-Specific Distributions
+
+We now look at a few major crops (apple, pear, cherry, corn) individually to check whether the shape of the burn cost distribution varies across them.
+
+#### Apple
+
+```{r, fig.height=7, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+plot_4_ranges(data, "maca", "darkgreen")
+
+```
+
+#### Pear
+
+```{r, fig.height=7, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+plot_4_ranges(data, "pera",  "darkgreen")
+```
+
+#### Corn
+
+```{r, fig.height=7, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+plot_4_ranges(data, "milho", "darkgreen")
+```
+
+#### Cherry
+
+```{r, fig.height=7, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+plot_4_ranges(data, "cereja", "darkgreen")
+```
+
+### Do Years Make a Difference?
+
+To check for temporal variation, we split the data by year and examine only values in the interval $0.1 < x < 0.99$, where most natural claim behavior is expected to occur.
+
+```{r, fig.height=12, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+plot_8_years(data, yrs = c(2014, 2015, 2016, 2019, 2020, 2021, 2022, 2023), col = "darkred")
+
+```
+
+### Key Takeaways
+
+The data shows a complex and mixed distribution, with multiple components:
+
+-   A strong spike at $x = 0$ (no claims).
+-   A decay-like behavior for $x \in (0, 0.15)$ --- possibly exponential.
+-   A second spike at $x = 1$, suggesting capped or full-coverage claims.
+-   A smooth, probabilistic structure between $x \in [0.15, 1)$, resembling Beta, Gamma, or Lognormal shapes.
+
+Notably, this structure is consistent across different crops and years, which gives us confidence to model it with a unified theoretical approach.
+
+Below is a conceptual sketch showing the combined model behavior:
+
+![](images/model.png)

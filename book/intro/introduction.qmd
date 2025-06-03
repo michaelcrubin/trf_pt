@@ -1,0 +1,58 @@
+# Introduction {#sec-energy-intro .unnumbered}
+
+```{r}
+#| results: "asis"
+#| echo: false
+library(here)
+source(here("scripts", "helpers.R"))
+```
+
+## Use of Weather Data
+
+Reliable weather data is a critical input for insurance products that depend on accurate risk modeling. In particular, the quantification of trend and volatility in precipitation patterns directly influences two key domains:
+
+-   Tarification: driven by long-term climate trends.
+
+-   Settlement: highly sensitive to short-term forecast deviations and bias.
+
+This project systematically evaluates meteorological data sources and models to identify those best suited for agricultural risk assessment and pricing, with an initial focus on Switzerland (SH) and extension to other operational regions (e.g., Serbia).
+
+## Core Concepts
+
+-   Trend: Derived from high-quality station measurements. Relevant for baseline risk modeling.
+
+-   Volatility: Captured through high-resolution forecasts. Key to short-term variability and uncertainty.
+
+-   Bias: Central to claim validation. Even small systematic errors can significantly impact settlement fairness.
+
+Our evaluation contrasts model-based (MB) and measurement-mixed (MM) approaches to identify strengths across use cases. MB models offer spatial coverage, while MM models aim for calibrated, local realism.
+
+## Project Goals
+
+Establish a unified, high-quality data source covering multiple regions and variables since 1993.
+
+-   Quantify error distributions and confidence bounds (CIs) for all relevant datasets.
+
+-   Determine suitability of each data source for pricing vs. settlement applications.
+
+## Strategic Value
+
+Improved weather data enables:
+
+-   Precise tarification based on long-term climate signals.
+
+-   Robust settlement decisions grounded in low-bias, high-resolution event data.
+
+## Scope
+
+The project integrates:
+
+-   Multi-source weather model ingestion.
+
+-   Ground truth alignment using official station data.
+
+-   Development of scientific metrics (e.g., nRMSE, EMD, centroid lag).
+
+-   Probabilistic error analysis with visual diagnostics.
+
+This documentation presents all technical, statistical, and implementation aspects in a reproducible, modular Quarto book format.

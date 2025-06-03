@@ -1,0 +1,608 @@
+## Bayesian Inference {#sec-energy-intro .unnumbered}
+
+
+
+```{r}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+
+library(here)
+invisible(capture.output(source(here("scripts", "global.R"))))
+invisible(capture.output(source(here("scripts", "helpers.R"))))
+invisible(capture.output(source(here("scripts", "bayes.R"))))
+
+```
+
+
+\
+\
+
+::: {.callout-tip title="Temporal dependence of Rain events"}
+If we are in the midst of a dry period, with little or no rain, the probability of rain in the next hour is low. Conversely, if it has been raining for several hours, the probability of continued rain is high. Rainfall is not independent from hour to hour --- it occurs in temporally correlated events, governed by atmospheric dynamics. To make statistical evaluations valid, we must identify segments of the time series that can be treated as approximately [**i.i.d.**](https://en.wikipedia.org/wiki/Independent_and_identically_distributed_random_variables). This section explains how we **quantify autocorrelation decay**, estimate the system's **memory timescale** $\tau$, and use it to construct **independent rain events**.
+:::
+
+\
+\
+\
+
+### Bayes Theorem
+
+New belief = (How consistent the data are with your idea × How much you believed the idea before) ÷ How often the data happen overall 
+
+$$
+P(Idea|Data)= P(Data)* P(Data|Idea)×P(Idea)
+$$
+
+
+
+This section establishes the statistical foundation for treating weather data --- specifically precipitation --- as **memoryless** beyond a certain time horizon. We derive the **temporal memory scale** $\tau$ from autocorrelation decay and interpret it through the lens of **Markov processes**. This analysis justifies later assumptions of independence in event-based evaluation.
+
+\
+
+
+### On a Single Value
+
+```{r}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+
+prior <- 0.01 # 1 % prevalence
+sens <- 0.99 # true-positive rate
+spec <- 0.95 # true-negative rate
+
+p_positive <- sens*prior + (1 - spec)*(1 - prior)   # overall + rate
+posterior  <- sens*prior / p_positive               # Bayes update
+
+print(posterior)
+
+
+library(ggplot2)
+df <- data.frame(stage = c("Prior", "Posterior"),
+                 prob  = c(prior, posterior))
+ggplot(df, aes(stage, prob)) +
+  geom_col() +
+  geom_text(aes(label = scales::percent(prob, accuracy = 1)), vjust = -0.3) +
+  labs(y = "Probability of disease") +
+  ylim(0, 0.2)
+
+```
+
+### Update Process on a Discrete Distribution
+
+
+We have a prior believe a coin is fair, i.e. chances of 0 and 1 are 0.5, but we are not sure. This initial believe / idea is represented by a blue discrete distribution. We then obtain 5 coin flips (red) and update our posterior believe (green) according to whether we get head or tail. Let's go through some examples:
+
+
+#### Prior is centered but weak | Data 5 x head
+
+We can see that in light of the strong evidence for head, the green distribution shifted quite strongly to the right.
+
+```{r, fig.height=10, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: true
+#| message: false
+
+
+# calculates the Likelihood P(Data|Idea) from 1 realization of a coin flip
+get_likelihoods <- function(flip, theta){
+  heads <- flip
+  tails <- 1 - flip
+  theta^heads * (1 - theta)^tails
+}  
+
+# runs through all coin flips and updates the prior and posteriors
+update_bayes <- function(theta, prior, flips){
+  
+  df <- tibble(theta = theta, post_0 = prior)
+  
+  for (i in seq_along(flips)) {
+    # updater
+    prior <- df[[paste0("post_", i-1)]]
+    lik <- get_likelihoods(flips[i], theta)
+    post = prior * lik / sum(prior * lik)
+
+    df[[paste0("prior_", i)]] <- prior
+    df[[paste0("lik_", i)]] <- lik
+    df[[paste0("post_", i)]] <- post
+  }
+  return(df)
+}
+
+# define the prior and the coin flips
+theta <- seq(0, 1, by = 0.02)
+prior_raw <- dnorm(theta, mean = 0.5, sd = 0.2)
+prior <- prior_raw / sum(prior_raw)
+flips <- c(1, 1, 1, 1, 1)
+
+df <- update_bayes(theta, prior, flips)
+plot_update_process(df)
+```
+
+
+
+
+#### Prior is centered and strong | Data 5 x head
+
+We have the exact same data (flips) as before. But our prior belive was much stronger (less uncertainty). Consequently, the green distribution wandered much less to the right.
+
+```{r, fig.height=10, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: true
+#| message: false
+
+# define the prior and the coin flips
+theta <- seq(0, 1, by = 0.02)
+prior_raw <- dnorm(theta, mean = 0.5, sd = 0.02)
+prior <- prior_raw / sum(prior_raw)
+flips <- c(1, 1, 1, 1, 1)
+
+df <- update_bayes(theta, prior, flips)
+plot_update_process(df)
+```
+
+
+
+#### Uninformative Prior | Data 30x head, 30x tail
+
+Here we have a prior with no information. All value are equally likely. Then we get a perfectly random h/t evidence. Gradually, our believe updates towards the true theta. But we also see that below some 15-20 samples, the MAP (maximum aposterior probability) jumps back and forth with every new data point. Only then we obtain a reasonable distribution.
+
+```{r, fig.height=10, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: true
+#| message: false
+
+# define the prior and the coin flips
+theta <- seq(0, 1, by = 0.02)
+prior_raw <- dnorm(theta, mean = 0.5, sd = 1)
+prior_raw <- rep(1, length(theta))
+length(prior_raw)
+prior <- prior_raw / sum(prior_raw)
+flips <- c(1, 0)%>% rep(30)
+
+df <- update_bayes(theta, prior, flips)
+df1 <- df %>% dplyr::select(theta, post_0, ends_with(c("_1", "_2", "_3","_4", "_5", "_10","_25", "_60")))
+plot_update_process(df1)
+```
+
+
+#### Prior is bias at head and weak | Data 5x tail
+
+Finally we have an example of a changing believe. We start with the believe that the coin is biased towards head, but in reality it is biased towars tail with 2/3. So the unknown parameter theta is 0.33. After 20 coin flipy, it zeroes in on that value.
+
+
+```{r, fig.height=10, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: true
+#| message: false
+
+# define the prior and the coin flips
+theta <- seq(0, 1, by = 0.02)
+prior_raw <- dnorm(theta, mean = 0.85, sd = 0.3)
+prior <- prior_raw / sum(prior_raw)
+flips <- c(0, 0, 1) %>% rep(10) 
+
+df <- update_bayes(theta, prior, flips)
+df1 <- df %>% dplyr::select(theta, post_0, ends_with(c("_1", "_2", "_10", "_11","_19", "_20")))
+plot_update_process(df1)
+```
+
+
+\
+\
+
+::: {.callout-tip title="Learnings"}
+We get a feel for the Bayesian Update process. In tarification, we are also in the parameter space from [0,1]. If we start with weak priors, the data are quick to react, but they are also unstable with every new data point. If we have stronger priors, the posteriors are more stable and move slower.
+:::
+
+\
+\
+\
+
+### The continous case 
+
+We have now a continous case with a Beta Prior, a Beta posterior. The data are still coin flips, but multiple ones which are aggregated to a binominal form.
+
+```{r, fig.height=5, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: true
+#| message: false
+
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+
+# heads out of 10 toss
+heads <- 7
+tails <- 7
+
+# Beta(2, 2) → mild belief: θ ~ 0.5 ------------------------
+alpha_prior <- 3
+beta_prior  <- 3
+
+# Beta(α+h, β+t)
+alpha_post <- alpha_prior + heads
+beta_post  <- beta_prior  + tails
+
+# Likelihood ∝ θ^h × (1-θ)^t = Beta(h+1, t+1) shape
+alpha_lik <- heads + 1
+beta_lik  <- tails + 1
+
+# ---- CURVE DATA ------------------------------------------------------
+theta <- seq(0, 1, length.out = 1000)
+
+df <- data.frame(
+  theta     = theta,
+  Prior     = dbeta(theta, alpha_prior, beta_prior),
+  Likelihood= dbeta(theta, alpha_lik, beta_lik),
+  Posterior = dbeta(theta, alpha_post, beta_post)
+) %>%
+  pivot_longer(-theta, names_to = "stage", values_to = "density") |>
+  mutate(stage = factor(stage, levels = c("Prior", "Likelihood", "Posterior")))
+
+ggplot(df, aes(theta, density, color = stage)) +
+  geom_line(size = 1.2) +
+  scale_color_manual(values = c(Prior = "grey50",
+                                Likelihood = "skyblue",
+                                Posterior = "red")) +
+  labs(title = "Bayesian Update: Beta-Binomial Model",
+       x = expression(theta),
+       y = "Density") +
+  theme_minimal(base_size = 14) +
+  theme(legend.position = "top",
+        legend.title = element_blank())
+
+
+
+
+```
+
+
+
+
+
+
+### The Big Challenge
+
+#### Modelling the data
+
+It is preferential to model the case in a conjugate prior. The form of our data sets the limits here, i.e. whether they are bound to [0, 1] and continuous. We have the following options:
+
+- Discrete, Binominal
+- continous, Normal
+- continous, Gamma
+- Continous, lognormal
+- Continous, exponential
+
+
+Hence, we first need to think about the form of our damage data.
+
+
+#### The form of the Damage Data
+
+
+```{r, fig.height=5, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: true
+#| message: false
+
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+
+
+```
+
+
+### Epistemic vs Aleatoric Risk
+
+#### Frequentist Approach
+
+**When you have 150+ data points, normal:**
+
+Then:
+
+$$
+\hat{\theta} \to \theta \quad \text{(consistent estimator)}
+$$
+
+So:
+
+$$
+p(y_{\text{future}} \mid \text{data}) \approx p(y \mid \hat{\theta})
+$$
+
+
+Consequently our tail:
+
+$$
+P(y > t \mid \text{data}) \approx P(y > t \mid \hat{\theta})
+$$
+
+→ The posterior predictive collapses to the known Gamma or other) likelihood. Here theta to simplify, it happens also to a/b params of gamma
+
+How many data we need?
+If everything is normal, after 15-30 data points
+
+$$
+  \bar{Y}_n \xrightarrow{\text{a.s.}} \mu_{y}
+$$
+
+
+**But with only 3-6 data points:**
+
+
+* The point estimate $\hat{\theta}$ is volatile.
+* The posterior $p(\theta \mid \text{data})$ is wide.
+
+So the predictive distribution:
+
+$$
+p(y_{\text{future}} \mid \text{data}) = \int p(y \mid \theta) \cdot p(\theta \mid \text{data}) \, d\theta
+$$
+
+is much wider and reflects our **epistemic uncertainty**.
+
+
+
+**The key takeaway:**
+Using the Frequentist, we assume the estimated $\theta$ is “true”. But this is wrong. It is just one possible realization of $p(\theta \mid \text{data})$.
+If we calculate tarifs for 25'000 Crop x municipality cells, we can be sure that a good portion of them will be "wrong". we will strongly underestimate tail P.
+
+
+
+**Bayesian:** Admits uncertainty about $\theta$ and integrates over all plausible values. Hence my spread is wider by the epistemic risk.
+
+to get an idea:
+
+
+```{r, fig.height=5, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: true
+#| message: false
+
+X <- get_burn()
+mn <- X$tot_claims%>%mean()
+X$tot_claims%>%sd()
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+
+# Set seed for reproducibility
+set.seed(42)
+
+# Sample size
+n_draws <- 5000
+
+# Epistemic uncertainty (theta ~ N(mu, sigma^2))
+theta_low  <- rnorm(n_draws, mean = 0, sd = mn/10)   # low epistemic uncertainty
+theta_high <- rnorm(n_draws, mean = 0, sd = mn/2)  # high epistemic uncertainty
+
+# Aleatoric uncertainty (epsilon ~ N(0, sigma^2))
+epsilon <- rnorm(n_draws, mean = mn, sd = mn/10)
+
+# Total predictive distribution: Z = theta + epsilon
+z_low  <- theta_low + epsilon
+z_high <- theta_high + epsilon
+
+# Combine into tidy format for plotting
+df <- tibble(
+  `We see low Epistemic`  = z_low,
+  `We see high Epistemic` = z_high,
+  aleatoric_risk = epsilon
+) %>%
+  pivot_longer(everything(), names_to = "Scenario", values_to = "Z")
+
+# Plot
+ggplot(df, aes(x = Z, fill = Scenario)) +
+  geom_density(alpha = 0.5) +
+  labs(title = "Predictive Distribution: Low vs High Epistemic Uncertainty",
+       x = "Predicted Value",
+       y = "Density") +
+  theme_minimal()
+
+
+```
+
+
+
+### The Big Challenge
+
+
+
+
+<!-- https://www.youtube.com/watch?v=vvUUmk9qfuA&list=PLyMQAuQWtatf1rVjSjf-6KEBbIQBO3wMY -->
+<!-- https://www.gdsd.statistik.uni-muenchen.de/2021/gdsd_huellermeier.pdf -->
+<!-- Two kinds of uncertainty -->
+<!-- name (common)	technical label	where it appears in Bayesian output	can it be driven to 0 by getting more data? -->
+<!-- Parameter / data-sparseness	epistemic variance   -->
+<!-- Var -->
+<!-- ⁡ -->
+<!-- ( -->
+<!-- 𝜃 -->
+<!-- ∣ -->
+<!-- data -->
+<!-- ) -->
+<!-- Var(θ∣data)	spread of the posterior for θ	Yes – as  -->
+<!-- 𝑛 -->
+<!-- → -->
+<!-- ∞ -->
+<!-- n→∞ it vanishes. -->
+<!-- Process / inherent risk	aleatory variance   -->
+<!-- Var -->
+<!-- ⁡ -->
+<!-- ( -->
+<!-- 𝑌 -->
+<!-- ∣ -->
+<!-- 𝜃 -->
+<!-- ) -->
+<!-- Var(Y∣θ)	the likelihood / conditional predictive	No – even with perfect knowledge of θ the outcome is still random. -->
+
+<!-- In symbols, for any future loss  -->
+<!-- 𝑌 -->
+<!-- Y -->
+
+<!-- Var -->
+<!-- ⁡ -->
+<!-- ( -->
+<!-- 𝑌 -->
+<!-- ∣ -->
+<!-- data -->
+<!-- ) -->
+<!-- ⏟ -->
+<!-- posterior-predictive -->
+<!--    -->
+<!-- = -->
+<!--    -->
+<!-- 𝐸 -->
+<!-- 𝜃 -->
+<!-- ∣ -->
+<!-- data -->
+<!--  ⁣ -->
+<!-- [ -->
+<!-- Var -->
+<!-- ⁡ -->
+<!-- ( -->
+<!-- 𝑌 -->
+<!-- ∣ -->
+<!-- 𝜃 -->
+<!-- ) -->
+<!-- ] -->
+<!-- ⏟ -->
+<!-- aleatory -->
+<!--    -->
+<!-- + -->
+<!--    -->
+<!-- Var -->
+<!-- ⁡ -->
+<!-- 𝜃 -->
+<!-- ∣ -->
+<!-- data -->
+<!--  ⁣ -->
+<!-- ( -->
+<!-- 𝐸 -->
+<!-- [ -->
+<!--   -->
+<!-- 𝑌 -->
+<!-- ∣ -->
+<!-- 𝜃 -->
+<!--   -->
+<!-- ] -->
+<!-- ) -->
+<!-- ⏟ -->
+<!-- epistemic -->
+<!-- (law of total variance) -->
+<!-- posterior-predictive -->
+<!-- Var(Y∣data) -->
+<!-- ​ -->
+
+<!-- ​ -->
+<!--  =  -->
+<!-- aleatory -->
+<!-- E  -->
+<!-- θ∣data -->
+<!-- ​ -->
+<!--  [Var(Y∣θ)] -->
+<!-- ​ -->
+
+<!-- ​ -->
+<!--  +  -->
+<!-- epistemic -->
+<!-- Var  -->
+<!-- θ∣data -->
+<!-- ​ -->
+<!--  (E[Y∣θ]) -->
+<!-- ​ -->
+
+<!-- ​ -->
+<!--  (law of total variance) -->
+<!-- First term = process risk (Gamma noise, Bernoulli hurdle, etc.). -->
+
+<!-- Second term = parameter risk (we don’t know the true θ well). -->
+
+<!-- How to keep only aleatory risk in practice -->
+<!-- Draw a single θ* – for example the posterior mean or any fixed posterior sample. -->
+
+<!-- Simulate future Y from  -->
+<!-- 𝑝 -->
+<!-- ( -->
+<!-- 𝑌 -->
+<!-- ∣ -->
+<!-- 𝜃 -->
+<!-- \* -->
+<!-- ) -->
+<!-- p(Y∣θ  -->
+<!-- \* -->
+<!--  ) without resampling θ. -->
+
+<!-- r -->
+<!-- Kopieren -->
+<!-- Bearbeiten -->
+<!-- theta_star <- posterior::as_draws_df(fit) %>% slice(1)   # pick first draw -->
+<!-- y_draws_aleatory <- posterior_predict( -->
+<!--   fit, newdata = grid, -->
+<!--   draws = 1000, incl_autocor = FALSE, -->
+<!--   re_formula = NULL, -->
+<!--   allow_new_levels = TRUE, -->
+<!--   draws_params = theta_star           # <- fix parameters -->
+<!-- ) -->
+<!-- Those 1 000 draws now vary only because of the hurdle coin + Gamma noise: epistemic variance is gone. -->
+
+<!-- If you instead run: -->
+
+<!-- r -->
+<!-- Kopieren -->
+<!-- Bearbeiten -->
+<!-- y_draws_full <- posterior_predict(fit, newdata = grid, allow_new_levels = TRUE) -->
+<!-- you get both sources. -->
+
+<!-- When does epistemic matter? -->
+<!-- Sparse crop-muni cells → posterior for θ is wide → large extra variance. -->
+
+<!-- Data-rich cells → posterior contracts → epistemic term almost 0, leaving only process risk. -->
+
+<!-- Typical actuarial use -->
+<!-- need	simulation recipe -->
+<!-- Technical premium / burn-rate	Take posterior mean of θ, ignore parameter variance. -->
+<!-- Process risk (e.g. solvency stop-loss)	Fix θ, draw many  -->
+<!-- 𝑌 -->
+<!-- Y → captures only claim frequency & severity randomness. -->
+<!-- Model-risk / parameter-risk capital	Draw θ each time and draw  -->
+<!-- 𝑌 -->
+<!-- Y → full predictive variance. -->
+
+<!-- So your question boils down to which part of Var(Y) you want. -->
+<!-- Bayesian machinery already separates them; you decide whether to average over θ or hold θ fixed. -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

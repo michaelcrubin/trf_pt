@@ -1,0 +1,141 @@
+## Aggretation of Gammas {#sec-energy-intro .unnumbered}
+
+
+
+
+```{r}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+
+library(here)
+invisible(capture.output(source(here("scripts", "global.R"))))
+invisible(capture.output(source(here("scripts", "helpers.R"))))
+invisible(capture.output(source(here("scripts", "gamma_funcs.R"))))
+
+
+
+```
+
+
+
+### Method
+
+We use Monte Carlo simulations under a purely theoretical setup, assuming full independence between units. The steps are:
+
+1. **Generate samples:** For each choice of $k$ (number of fields) and scale $θ$, draw $50000$ independent samples of either $Exp(1/θ)$ or $Gamma(α,θ)$.
+2. Simulate it for different $k$.  
+3. calculate the empirical parameters like SD and mean
+4. **Compare to theory: Visually compare the 2 curves, theory and empirical.
+
+Our goal is simply to verify that the simulated averages behave as expected under the Gamma aggregation model.
+
+Note we talk now about mean, not sum, hence theta gets divided by k
+
+
+$$\text{mean of } k * Gamma(α, θ)\Longrightarrow Gamma(α*k, θ/k)$$
+
+
+### Simulation of Exp(1/θ)
+
+**We run it for 3 different θ:**
+
+
+```{r, fig.height=10, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+make_exp_mc_plots(theta = c(0.5), k = c(1, 3, 9, 27, 100), n_sims = 20000)
+
+```
+
+
+```{r, fig.height=10, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+make_exp_mc_plots(theta = c(0.1), k = c(1, 3, 9, 27, 100), n_sims = 20000)
+
+```
+
+
+```{r, fig.height=10, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+make_exp_mc_plots(theta = c(0.01), k = c(1, 3, 9, 27, 100), n_sims = 20000)
+
+```
+
+
+
+#### Why does empirical average diverge at small theta
+
+We observe a strange behavour of the empirical average (blue). The problem is only the plotting function after_stat(density). Because it uses Gaussian Kerneling, the near-zero Gaussians leak to <0 and hence distort the smoothing function. If you look at a hist of the empirical average, it looks perfectly gamma.
+
+
+```{r, fig.height=14, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+make_exp_mc_plots(theta = c(0.1, 0.08, 0.05, 0.025, 0.015, 0.01, 0.008, 0.006, 0.002, 0.001), k = c(27), n_sims = 20000)
+
+```
+
+
+
+### Simulation of Gamma(α, θ)
+
+It is also thinkable that our atomic risk units (fields) follows a gamma distribution with some $α > 1$, in which case the most likely burn cost will be >0. Thankfully, the aggregation behavour of k Gammas follows the exact same pattern as in the case of Exponentials.
+
+
+**We do it for 2 different θ and 2 different α:**
+
+
+```{r, fig.height=10, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+
+make_gamma_mc_plots(theta = c(0.1),  alpha = c(1.3), k = c(1, 3, 9, 27, 100), n_sims = 50000)
+
+```
+
+
+```{r, fig.height=10, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+
+make_gamma_mc_plots(theta = c(0.1),  alpha = c(1.8), k = c(1, 3, 9, 27, 100), n_sims = 50000)
+
+```
+
+```{r, fig.height=10, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+
+make_gamma_mc_plots(theta = c( 0.5),  alpha = c(1.3), k = c(1, 3, 9, 27, 100), n_sims = 50000)
+
+```
+
+```{r, fig.height=10, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+
+make_gamma_mc_plots(theta = c( 0.5),  alpha = c( 1.8), k = c(1, 3, 9, 27, 100), n_sims = 50000)
+
+```
+
+

@@ -1,0 +1,347 @@
+
+
+## Error Metrics {#sec-energy-intro .unnumbered}
+
+\
+\
+
+::: {.callout-tip title="Temporal dependence of Rain events"}
+We evaluate forecast accuracy at the **event level**, where each rain
+event is treated as a coherent unit of prediction and observation. This
+aligns with both meteorological structure and statistical assumptions.
+The metrics are grouped into categories that reflect key dimensions of
+performance: **volume accuracy**, **shape similarity**, and **temporal
+alignment**.
+:::
+
+\
+\
+\
+
+### Metrics Concept
+
+The notation follows:
+
+-   Let $Y = (y_1, \dots, y_n)$ be the observed station rainfall during
+    an event (hourly resolution).
+-   Let $\hat{Y} = (\hat{y}_1, \dots, \hat{y}_n)$ be the respective model at the corresponding location.
+-   $n$ is the event duration in hours.
+
+\
+
+Our metrics framework is:
+
+-   **Event-based**: avoids aggregation dilution
+-   **Memory-aware**: based on physically separated, statistically
+    independent events
+-   **Multi-dimensional**: captures volume, shape, and timing
+-   **Interpretable**: metrics map to operational implications
+
+We shed a particular light on the following metrics:
+
+-   **EMD** quantifies whether **rain was forecast at the right time**,
+    in the right pattern.
+-   **Log bias** gives a **balanced, scale-insensitive volume error**.
+-   **Centroid lag** indicates **systematic timing offset**.
+
+These metrics are designed to inform both **scientific diagnostics** and
+**practical decisions** --- including forecast provider comparison,
+post-processing calibration, and insurance product design.
+
+### Volume Accuracy
+
+These metrics compare the **total rainfall** forecasted vs. observed
+across an event.
+
+#### Absolute Bias
+
+$$
+\text{Bias} = \sum_{i=1}^n (\hat{y}_i - y_i)
+$$ A positive bias indicates **overforecasting**; a negative bias
+indicates **underforecasting**. Bias captures systematic shift in total
+volume.
+
+#### Sum Ratio
+
+$$
+\text{Sum Ratio} = \frac{\sum \hat{y}_i}{\sum y_i}
+$$ This normalizes the bias. Values above 1 indicate excess rainfall in
+the forecast relative to ground truth. Values near 1 are ideal.
+
+#### Log Bias
+
+$$
+\text{Log Bias} = \log\left(\frac{\sum \hat{y}_i + \varepsilon}{\sum y_i + \varepsilon}\right)
+$$ This metric is **symmetric** and less sensitive to scale. It treats
+under- and over-forecasting on a log scale, making a 2× over-forecast
+equivalent (in magnitude) to a 50% under-forecast. This is particularly
+useful when aggregating over multiple events.
+
+\
+
+### Structural Accuracy
+
+These metrics assess how well the **temporal profile** of the forecast
+matches the observation, beyond total volume.
+
+#### Mean Absolute Error (MAE)
+
+$$
+\text{MAE} = \frac{1}{n} \sum_{i=1}^n |\hat{y}_i - y_i|
+$$
+
+#### Normalized RMSE (nRMSE)
+
+$$
+\text{nRMSE} = \frac{\text{RMSE}}{\sum y_i}
+$$ Although RMSE and MAE are standard, they lose interpretability when
+evaluating events with very low total volume. We therefore supplement
+them with distribution-sensitive metrics.
+
+#### Earth Mover's Distance (EMD)
+
+$$
+\text{EMD} = \sum_{i=1}^n \left| \frac{1}{\sum \hat{y}_j} \sum_{j=1}^i \hat{y}_j - \frac{1}{\sum y_j} \sum_{j=1}^i y_j \right|
+$$
+
+The **EMD** measures the amount of "work" needed to transform the
+forecast distribution into the observed one. It is sensitive to
+**distributional shifts**, e.g., over-concentrating rain in the wrong
+hours. EMD is **normalized to \[0, 1\]** and interpretable as a distance
+between probability distributions. A low EMD means the **temporal
+allocation** of rain is accurate --- essential for event timing and
+intensity.
+
+
+
+#### Supremum Distance (sup)
+
+$$
+\text{sup} = \max_i \left| \sum_{j=1}^i \hat{y}_j - \sum_{j=1}^i y_j \right|
+$$
+
+The supremum distance captures the **maximum absolute disagreement** in
+cumulative rainfall over time. Unlike EMD, it is unnormalized and
+sensitive to outliers. It is the concept used in the Kolmogorov-Smirnov
+Test. It reflects the worst-case deviation at any point in the event.
+
+![](images/KS_Example.png)
+
+
+### Temporal Accuracy
+
+These metrics evaluate **forecast timing**, which is critical for
+operational decision-making.
+
+
+
+#### Centroid Lag
+
+$$
+\text{Lag} = \hat{\mu} - \mu, \quad \text{where} \quad \mu = \frac{\sum t_i y_i}{\sum y_i},\quad \hat{\mu} = \frac{\sum t_i \hat{y}_i}{\sum \hat{y}_i}
+$$
+
+This is the **difference between the center of mass** (temporal
+centroid) of the forecast vs. observation. A **positive lag** means the
+forecasted event **arrives late**; a **negative lag** implies it's
+**early**. This metric is robust and interpretable in hours. For
+agriculture, centroid lag quantifies whether field decisions might be
+systematically mistimed by the forecast.
+
+\
+\
+
+
+### Aggregation Across Events
+
+to other section Let $E$ be the set of all detected events.
+
+-   **Total bias**: $\sum_{e \in E} \text{Bias}_e$
+-   **Global sum ratio**:
+    $\frac{\sum_{e} \sum \hat{y}_i^e}{\sum_{e} \sum y_i^e}$
+-   **Mean MAE/EMD/centroid lag**: weighted by event duration $$
+    \text{Mean MAE} = \frac{\sum_e n_e \cdot \text{MAE}_e}{\sum_e n_e}
+    $$
+-   **Max sup distance**: $\max_e \text{sup}_e$
+
+This provides global statistics while respecting event heterogeneity
+(size, duration, and impact).
+
+\
+\
+\
+
+### Deep Dive on Earth Mover Distance
+
+The **EMD** measures the amount of "work" needed to transform the
+forecast distribution into the observed one. It is sensitive to
+**distributional shifts**, e.g., over-concentrating rain in the wrong
+hours. EMD is **normalized to \[0, 1\]** and interpretable as a distance
+between probability distributions. A low EMD means the **temporal
+allocation** of rain is accurate. Often, timing errors have higher impacts than scale erros.
+
+
+![](images/Earth_mover_distance_logo.png)\
+
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+
+library(here)
+source(here("scripts", "helpers.R"))
+source(here("scripts", "memory_funcs.R"))
+source(here("scripts", "metric_funcs.R"))
+source(here("scripts", "event_funcs.R"))
+
+var_id <- "rain_hour"
+country <- "switzerland"
+suffix <- "w_mb"
+
+data <- open_data(var_id, country, suffix, loc_id = c("rain_hour_mm_che_350"))
+
+
+```
+
+
+\
+\
+
+#### Example: Simple Event on Dummy Distributions
+
+We pick a simple Event and make a copy of the station data with just some offsets and some lags.
+
+
+
+```{r}
+#| echo: false
+#| results: asis
+#| warning: false
+#| message: false
+
+X <-data %>% 
+  dplyr::mutate(year = lubridate::year(timestamp)) %>%
+  dplyr::filter(loc_id =="rain_hour_mm_che_350" & year == "2024") %>%
+  rain_event_detector(rain_threshold = 0.01, padding = 1, sum_threshold = 5 ) %>%
+  dplyr::filter(event_id == 31) %>% 
+  dplyr::select(timestamp, event_id, station) %>%
+  add_margins(n=15) %>% 
+  add_dummies(perc = 0.1, n = 5)
+
+
+htmlwidgets::saveWidget(plot_spaghetti(X), file = "../www/graph/emd_deep_spaghetti.html", selfcontained = TRUE)
+htmlwidgets::saveWidget(emd_subplot(X, "lead"), file = "../www/graph/emd_lead.html", selfcontained = TRUE)
+htmlwidgets::saveWidget(emd_subplot(X, "lag"), file = "../www/graph/emd_lag.html", selfcontained = TRUE)
+htmlwidgets::saveWidget(emd_subplot(X, "off_up"), file = "../www/graph/emd_off_up.html", selfcontained = TRUE)
+htmlwidgets::saveWidget(emd_subplot(X, "off_down"), file = "../www/graph/emd_off_down.html", selfcontained = TRUE)
+
+
+cat(glue::glue('<iframe src="../www/graph/emd_deep_spaghetti.html" width="100%" height="500px" style="border:none;"></iframe>'))
+cat(glue::glue('<iframe src="../www/graph/emd_lag.html" width="100%" height="400px" style="border:none;"></iframe>'))
+cat(glue::glue('<iframe src="../www/graph/emd_lead.html" width="100%" height="300px" style="border:none;"></iframe>'))
+cat(glue::glue('<iframe src="../www/graph/emd_off_up.html" width="100%" height="300px" style="border:none;"></iframe>'))
+cat(glue::glue('<iframe src="../www/graph/emd_off_down.html" width="100%" height="300px" style="border:none;"></iframe>'))
+
+```
+
+
+\
+\
+\
+
+
+#### Example: Simple Event on Models
+
+Now we run the same event, but compare the actual models against the station.
+
+
+
+```{r}
+#| echo: false
+#| results: asis
+#| warning: false
+#| message: false
+
+X <-data %>% 
+  dplyr::mutate(year = lubridate::year(timestamp)) %>%
+  dplyr::filter(loc_id =="rain_hour_mm_che_350" & year == "2024") %>%
+  rain_event_detector(rain_threshold = 0.01, padding = 1, sum_threshold = 5 ) %>%
+  dplyr::filter(event_id == 31) %>% 
+  dplyr::select(timestamp, event_id, station, mm_mix, mm_era5, mm_swiss1k, mm_iconeu, mb_iconeu, mb_nmm, mb_nems)
+
+
+htmlwidgets::saveWidget(plot_spaghetti(X), file = "../www/graph/emd_simple_spaghetti.html", selfcontained = TRUE)
+htmlwidgets::saveWidget(emd_subplot(X, "mb_iconeu"), file = "../www/graph/emd_simple_iconeu.html", selfcontained = TRUE)
+htmlwidgets::saveWidget(emd_subplot(X, "mm_era5"), file = "../www/graph/emd_simple_era5.html", selfcontained = TRUE)
+htmlwidgets::saveWidget(emd_subplot(X, "mm_mix"), file = "../www/graph/emd_simple_mix.html", selfcontained = TRUE)
+htmlwidgets::saveWidget(emd_subplot(X, "mm_swiss1k"), file = "../www/graph/emd_simple_1k.html", selfcontained = TRUE)
+htmlwidgets::saveWidget(emd_subplot(X, "mb_nems"), file = "../www/graph/emd_simple_nems.html", selfcontained = TRUE)
+
+cat(glue::glue('<iframe src="../www/graph/emd_simple_spaghetti.html" width="100%" height="500px" style="border:none;"></iframe>'))
+cat(glue::glue('<iframe src="../www/graph/emd_simple_iconeu.html" width="100%" height="300px" style="border:none;"></iframe>'))
+cat(glue::glue('<iframe src="../www/graph/emd_simple_era5.html" width="100%" height="300px" style="border:none;"></iframe>'))
+cat(glue::glue('<iframe src="../www/graph/emd_simple_mix.html" width="100%" height="300px" style="border:none;"></iframe>'))
+cat(glue::glue('<iframe src="../www/graph/emd_simple_1k.html" width="100%" height="300px" style="border:none;"></iframe>'))
+cat(glue::glue('<iframe src="../www/graph/emd_simple_nems.html" width="100%" height="300px" style="border:none;"></iframe>'))
+
+```
+
+
+
+\
+\
+
+#### Example: Complex Event
+
+Now we run it for a much more involved event.
+
+
+
+```{r}
+#| echo: false
+#| results: asis
+#| warning: false
+#| message: false
+
+X <-data %>% 
+  dplyr::mutate(year = lubridate::year(timestamp)) %>%
+  dplyr::filter(loc_id =="rain_hour_mm_che_350" & year == "2024") %>%
+  rain_event_detector(rain_threshold = 0.01, padding = 1, sum_threshold = 5 ) %>%
+  dplyr::filter(event_id == 2) %>% 
+  dplyr::select(timestamp, event_id, station, mm_mix, mm_era5, mm_swiss1k, mm_iconeu, mb_iconeu, mb_nmm, mb_nems)
+
+
+htmlwidgets::saveWidget(plot_spaghetti(X), file = "../www/graph/emd_complex_spaghetti.html", selfcontained = TRUE)
+htmlwidgets::saveWidget(emd_subplot(X, "mb_iconeu"), file = "../www/graph/emd_complex_iconeu.html", selfcontained = TRUE)
+htmlwidgets::saveWidget(emd_subplot(X, "mm_era5"), file = "../www/graph/emd_complex_era5.html", selfcontained = TRUE)
+htmlwidgets::saveWidget(emd_subplot(X, "mm_mix"), file = "../www/graph/emd_complex_mix.html", selfcontained = TRUE)
+htmlwidgets::saveWidget(emd_subplot(X, "mm_swiss1k"), file = "../www/graph/emd_complex_1k.html", selfcontained = TRUE)
+htmlwidgets::saveWidget(emd_subplot(X, "mb_nems"), file = "../www/graph/emd_complex_nems.html", selfcontained = TRUE)
+
+cat(glue::glue('<iframe src="../www/graph/emd_complex_spaghetti.html" width="100%" height="500px" style="border:none;"></iframe>'))
+cat(glue::glue('<iframe src="../www/graph/emd_complex_iconeu.html" width="100%" height="300px" style="border:none;"></iframe>'))
+cat(glue::glue('<iframe src="../www/graph/emd_complex_era5.html" width="100%" height="300px" style="border:none;"></iframe>'))
+cat(glue::glue('<iframe src="../www/graph/emd_complex_mix.html" width="100%" height="300px" style="border:none;"></iframe>'))
+cat(glue::glue('<iframe src="../www/graph/emd_complex_1k.html" width="100%" height="300px" style="border:none;"></iframe>'))
+cat(glue::glue('<iframe src="../www/graph/emd_complex_nems.html" width="100%" height="300px" style="border:none;"></iframe>'))
+
+# sum(cumsum(X$station) - cumsum(X$mm_mix)) 
+# sum(cumsum(X$station) - cumsum(X$mm_swiss1k)) 
+```
+
+::: {.callout-tip title="Take Away"}
+
+The Earth Mover’s Distance (EMD) corresponds to the **area between the CDFs** (cumulative distribution functions) of two distributions — visually represented by the red shaded region.
+
+However, this is a **scaled** comparison: both inputs are normalized into probability distributions, meaning EMD **only reflects relative shape differences**, not absolute volume differences.
+
+EMD **punishes both scale and timing errors**, but one important limitation is that it remains **relative to the ground truth (station)**. This means the EMD is sensitive to the **magnitude** of the station data. 
+
+As a result, EMD can be **counterintuitive at points where the station is zero**, since even large differences in that region may not contribute significantly to the metric.
+
+In summary, **the EMD you're calculating does not capture total rainfall (volume) differences — only how the shape of the distribution changes after scaling**.
+
+:::
+

@@ -1,0 +1,86 @@
+project:
+  type: book
+  output-dir: docs
+
+book:
+  title: "Tarification Portugal using Bayesian Models"
+  reader-mode: true
+  author: "Schweizer Hagel | Michael C. Rubin"
+  favicon: www/img/schweizer_hagel_logo.jpeg
+  cover-image: www/img/ttl2.jpg
+  site-url: https://hagel.ch
+  date: "2025-05-14"
+  page-footer:
+    left: |
+      Project Developed by <br>
+      <a href="https://hagel.ch/">Michael C. Rubin, SHVG</a>.
+    right: |
+      Version 1.2 <br> April 2024
+    center: |
+      <img src="https://www.hagel.ch/assets/project/images/logo.svg" alt="Logo" class="footer-logo">
+  
+  sidebar: 
+    logo: https://www.hagel.ch/assets/project/images/logo.svg
+    search: true
+    
+  chapters:
+    - index.qmd
+    - part: intro/introduction.qmd
+      chapters:
+        - intro/goal.qmd
+   #     - intro/problem_statement.qmd
+
+    - part: inspection/inspect_intro.qmd
+      chapters:
+        - inspection/data_inspect.qmd
+        - inspection/damage_ceiling.qmd
+        - inspection/aggregation_effect.qmd
+        - inspection/dilution_effect.qmd
+    - part: modelling/modelling_intro.qmd
+      chapters:
+        - modelling/problem_setting.qmd
+        - modelling/gamma_theory.qmd
+        - modelling/gamma_practice.qmd
+   #     - theory/metrics.qmd
+
+    # - part: tarif/tarif_intro.qmd
+    #   chapters:
+        # - tarif/set_up.qmd
+        # - tarif/understand_data.qmd
+
+        # - tarif/geography.qmd
+        # - tarif/trends.qmd
+        # - tarif/take_away.qmd
+
+    # - part: data/intro.qmd
+    #   chapters:
+    #     - data/structure.qmd
+    #     - data/api.qmd
+    
+chapters:
+  unnumbered: true
+
+execute:
+  echo: true
+  warning: false
+  error: false
+
+#bibliography: references.bib
+
+format:
+  html:
+    allow-html: true
+    theme:
+      - simplex
+      - www/style/sda.scss
+      # - https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css
+    code-link: true
+    code-fold: true
+    code-summary: "Show Code"
+    
+    author-meta: "Michael C. Rubin"
+    # include-in-header: "plausible.html"
+    callout-appearance: simple
+
+editor: visual
+

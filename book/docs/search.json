@@ -1,0 +1,107 @@
+[
+  {
+    "objectID": "index.html#why-this-matters",
+    "href": "index.html#why-this-matters",
+    "title": "Tarification Portugal using Bayesian Models",
+    "section": "Why this matters",
+    "text": "Why this matters\nMost weather data used today stems from numerical weather prediction (NWP) models. These models simulate the atmosphere using physical equations and are essential for forecasting.\nHowever, NWP forecasts can deviate significantly from reality — especially during localized or extreme events. The images below illustrate this issue:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nIn both cases, measured precipitation (from certified ground stations) differs sharply from the modelled output. Sometimes the model completely misses an event; other times it exaggerates intensity or shifts it in time.\nThese mismatches are not rare. They happen frequently and often without clear patterns. Until now, they were observed anecdotally, not quantified systematically.\nThis project addresses that gap: we design a rigorous, automated system to evaluate how well NWP data matches reality — across regions, years, and event types."
+  },
+  {
+    "objectID": "intro/introduction.html#use-of-weather-data",
+    "href": "intro/introduction.html#use-of-weather-data",
+    "title": "Introduction",
+    "section": "Use of Weather Data",
+    "text": "Use of Weather Data\nReliable weather data is a critical input for insurance products that depend on accurate risk modeling. In particular, the quantification of trend and volatility in precipitation patterns directly influences two key domains:\n\nTarification: driven by long-term climate trends.\nSettlement: highly sensitive to short-term forecast deviations and bias.\n\nThis project systematically evaluates meteorological data sources and models to identify those best suited for agricultural risk assessment and pricing, with an initial focus on Switzerland (SH) and extension to other operational regions (e.g., Serbia)."
+  },
+  {
+    "objectID": "intro/introduction.html#core-concepts",
+    "href": "intro/introduction.html#core-concepts",
+    "title": "Introduction",
+    "section": "Core Concepts",
+    "text": "Core Concepts\n\nTrend: Derived from high-quality station measurements. Relevant for baseline risk modeling.\nVolatility: Captured through high-resolution forecasts. Key to short-term variability and uncertainty.\nBias: Central to claim validation. Even small systematic errors can significantly impact settlement fairness.\n\nOur evaluation contrasts model-based (MB) and measurement-mixed (MM) approaches to identify strengths across use cases. MB models offer spatial coverage, while MM models aim for calibrated, local realism."
+  },
+  {
+    "objectID": "intro/introduction.html#project-goals",
+    "href": "intro/introduction.html#project-goals",
+    "title": "Introduction",
+    "section": "Project Goals",
+    "text": "Project Goals\nEstablish a unified, high-quality data source covering multiple regions and variables since 1993.\n\nQuantify error distributions and confidence bounds (CIs) for all relevant datasets.\nDetermine suitability of each data source for pricing vs. settlement applications."
+  },
+  {
+    "objectID": "intro/introduction.html#strategic-value",
+    "href": "intro/introduction.html#strategic-value",
+    "title": "Introduction",
+    "section": "Strategic Value",
+    "text": "Strategic Value\nImproved weather data enables:\n\nPrecise tarification based on long-term climate signals.\nRobust settlement decisions grounded in low-bias, high-resolution event data."
+  },
+  {
+    "objectID": "intro/introduction.html#scope",
+    "href": "intro/introduction.html#scope",
+    "title": "Introduction",
+    "section": "Scope",
+    "text": "Scope\nThe project integrates:\n\nMulti-source weather model ingestion.\nGround truth alignment using official station data.\nDevelopment of scientific metrics (e.g., nRMSE, EMD, centroid lag).\nProbabilistic error analysis with visual diagnostics.\n\nThis documentation presents all technical, statistical, and implementation aspects in a reproducible, modular Quarto book format."
+  },
+  {
+    "objectID": "intro/goal.html#project-goal",
+    "href": "intro/goal.html#project-goal",
+    "title": "Goal",
+    "section": "Project Goal",
+    "text": "Project Goal\nGoal is to make complete and data-based risk tarification for Swiss Hail Portugal. We have 94 Crops and 274 municipalities. We need a tarif for each crop x municipality. hence 25756 tarifs."
+  },
+  {
+    "objectID": "intro/goal.html#data-basis",
+    "href": "intro/goal.html#data-basis",
+    "title": "Goal",
+    "section": "Data Basis",
+    "text": "Data Basis\n\nPublic Damage data on a per crop and per municipality and per year basis"
+  },
+  {
+    "objectID": "inspection/inspect_intro.html",
+    "href": "inspection/inspect_intro.html",
+    "title": "Data Inspection",
+    "section": "",
+    "text": "This chapter inspects the data and highlights two key challenges: data scarcity and aggregation. We must recognize that most of the distribution is unseen, and that we only observe aggregated effects rather than true underlying phenomena.\n\n\n\n\n\n\nOur data is extremely scarce, which means we must be particularly careful in how we inspect it. In any statistical context, good analysis accounts not only for observed values but also for the unseen portion of the distribution. In this problem, the unseen data actually constitutes the majority of what we need to model—making thorough inspection even more critical.\nA further complication is that we only have aggregated data at hand. We do not observe the true natural phenomena directly; instead, we see effects that have been pooled across regions or sums insured. Understanding how aggregation distorts the underlying signal is therefore essential before any modeling can begin."
+  },
+  {
+    "objectID": "inspection/data_inspect.html",
+    "href": "inspection/data_inspect.html",
+    "title": "Data Inspection (Burn)",
+    "section": "",
+    "text": "We begin with an exploratory look at the burn cost data to understand its structure and challenges. This includes assessing the overall distribution, slicing it into interpretable segments, and analyzing patterns across crops and years.\n\n\n\n\n\nFirst, we take a look at the raw data - specifically, the burn cost, defined as:\n\\[\nburn\\_cost = \\frac{tot\\_claims}{sum\\_insured}\n\\]\nThis inspection is done at the municipality–crop level, exactly as the data is received. The goal is to form an intuitive understanding of the distribution of the brun cost.\n\n\nOverall Burn Cost Distribution\nWe first visualize the burn cost across the entire dataset. The distribution is heavily zero-inflated, meaning there is a large number of observations with a burn cost of exactly \\(0\\). As this makes the visualization of the none-zero entries impossible, we create 4 different histogram-plots slicing different ranges of x. It’s like zooming in.\n\n\n\n\n\n\nProbability by Slice\nThe table below summarizes how many observations fall into each of the defined burn cost segments. These “slices” are intended to reveal different regimes of behavior in the data:\n\n0_zero_inflater: Exactly zero\n1_expo_decay: Small positive values (\\(0 < x < 0.15\\))\n2_natural_phenomena: Mid-range values (\\(0.15 < x < 0.99\\))\n3_damage_ceiling: Values very close to or exactly \\(1\\)\n\n\n\n\nslicenpercent0_zero_inflater256,51199.1961_expo_decay7260.2812_natural_phenomena1,3070.5053_damage_ceiling460.018\n\n\n\n\n\nCrop-Specific Distributions\nWe now look at a few major crops (apple, pear, cherry, corn) individually to check whether the shape of the burn cost distribution varies across them.\n\nApple\n\n\n\n\n\n\n\nPear\n\n\n\n\n\n\n\nCorn\n\n\n\n\n\n\n\nCherry\n\n\n\n\n\n\n\n\nDo Years Make a Difference?\nTo check for temporal variation, we split the data by year and examine only values in the interval \\(0.1 < x < 0.99\\), where most natural claim behavior is expected to occur.\n\n\n\n\n\n\n\nKey Takeaways\nThe data shows a complex and mixed distribution, with multiple components:\n\nA strong spike at \\(x = 0\\) (no claims).\nA decay-like behavior for \\(x \\in (0, 0.15)\\) — possibly exponential.\nA second spike at \\(x = 1\\), suggesting capped or full-coverage claims.\nA smooth, probabilistic structure between \\(x \\in [0.15, 1)\\), resembling Beta, Gamma, or Lognormal shapes.\n\nNotably, this structure is consistent across different crops and years, which gives us confidence to model it with a unified theoretical approach.\nBelow is a conceptual sketch showing the combined model behavior:"
+  },
+  {
+    "objectID": "inspection/damage_ceiling.html",
+    "href": "inspection/damage_ceiling.html",
+    "title": "Damage Ceiling",
+    "section": "",
+    "text": "We investigate the spike at \\(x = 1\\) in the burn cost data. This section provides a theoretical explanation, supports it with empirical evidence, and concludes that this peak represents a natural upper bound — the burn ceiling — which should be explicitly modeled.\n\n\n\n\n\nThis section explores the peak at \\(x = 1\\) observed in the burn cost data. While much of the distribution appears continuous or decaying, this spike suggests a structural limit in how losses occur — specifically, a maximum possible burn of 1.\n\n\nTheoretical Concept\nIn typical natural processes, losses might follow a Gamma or Exponential distribution — both of which have a tail that extends to infinity. However, for crop losses, there is a hard ceiling at burn cost = 1.\nOnce a field is fully destroyed, no additional loss can occur — even if the damaging event (e.g. hail, drought) continues. In effect, all excess probability mass that would fall above \\(x = 1\\) must be accumulated at 1.\nThis leads to the formation of a spike at \\(x = 1\\), as shown in the conceptual model below:\n\n\n\n\nDoes the Probability Mass Match?\nExcluding the zero-inflated component, we observe that approximately 10%–20% of the empirical distribution’s probability mass lies at exactly \\(x = 1\\).\nWe can compare this to a Gamma distribution. For example:\n\nLet \\(X \\sim \\text{Gamma}(\\alpha = 1, \\theta = 0.3)\\)\n\nThen \\(\\mathbb{P}(X > 1) \\approx 15\\%\\)\n\nThis matches quite intuitively. A Gamma with \\(\\theta = 0.3\\) is a reasonable approximation for crop-level burn rates, and this theoretical “overflow” mass aligns with the spike we observe at 1.\n\n\n\n\nHypothesis Testing\nIf this concept was true, then crop × municipality combinations with higher mean values would, in tendency, also have higher mass peaking at \\(x = 1\\). We can test this by grouping the data into crop × municipality combinations into such with P Mass at and such without the same phenomena. Then we simply take the mean of each group and compare them.\n\n\nShow Code\ntbl <- data %>%\n  dplyr::filter(burn_cost > 0.15)%>%\n  mutate(mass_above_1 = as.integer(burn_cost >= 1)) %>%\n  group_by(crop_key, municipality_name) %>%\n  summarise(mass_above_1 = sum(mass_above_1),\n            has_above_1 = mass_above_1 > 0,\n            n=n(),\n            mean_bc = mean(burn_cost), \n            .groups = \"drop\") %>% \n  group_by(has_above_1) %>%\n  summarise(mean_bc = mean(mean_bc), n=n(), .groups = \"drop\")\n\ntbl %>%\n  flextable() %>%\n  theme_vanilla()\n\n\n\nhas_above_1mean_bcnFALSE0.3280145328TRUE0.591642218\n\n\n\n\nResult\n\n\n\n\n\n\nThe crop × municipality combinations, which do not have any P Mass at \\(x = 1\\) have a mean value of 0.328, while the cells which do have P Mass at \\(x = 1\\) show a mean value of 0.592. This is a large difference. Hence, we assume that the peak at \\(x = 1\\) is indeed caused by the ceiling of the burn distribution."
+  },
+  {
+    "objectID": "inspection/aggregation_effect.html",
+    "href": "inspection/aggregation_effect.html",
+    "title": "Geographic Aggregation",
+    "section": "",
+    "text": "We explore how geographic aggregation — from municipality to district to country level — affects the shape of the burn cost distribution. This helps us understand the source of small non-zero values.\n\n\n\nTo better understand why there are so many data points close to zero but not exactly zero, we analyze how the data behaves when aggregated at different geographic levels.\n\n\nAggregated to District Level\nWe recreate the earlier range plots, but now aggregate the data to the district level. That is, we have one entry per district–year–crop combination.\n\n\n\n\n\n\n\nAggregated to Country Level\nWe further aggregate the data to the country level, producing just one entry for each year and crop.\n\n\n\n\n\n\n\nAggregation Effect\nThe following plots compare the distribution of positive burn values across three levels of geographic aggregation:\n\nMunicipality level (blue)\nDistrict level (green, for a high-damage crop)\nCountry level (red, for one specific year)\n\nThis helps us visualize what happens to the distribution — especially the small-damage region — as we aggregate more.\n\n\n\n\n\n\n\nReasoning\n\n\n\n\n\n\nIn some way, it doesn’t make sense to have claims smaller than 1% — no farmer would bother claiming that. The likely explanation is aggregation dilution: when a single event affects a small part of a large area, the burn cost gets spread thinly over the full insured area. As we move from municipality to district to country, this effect should become more visible. The charts above suggest this pattern — especially for all crops combined — but it’s not entirely conclusive. We will test this hypothesis further in the next section."
+  },
+  {
+    "objectID": "inspection/dilution_effect.html",
+    "href": "inspection/dilution_effect.html",
+    "title": "Dilution Effect",
+    "section": "",
+    "text": "We investigate whether the large number of small—but nonzero—burn cost values can be explained by a dilution effect. In other words, small burn costs may result when actual losses are spread over very large insured amounts or large geographic areas.\n\n\n\nA substantial fraction of burn costs falls between 0 % and 1 %. Such tiny damages seem unlikely as individual claims—few policyholders would report losses that small in isolation. We therefore hypothesize a dilution effect, meaning that real damage exists but gets “diluted” when spread across large sums insured or extensive geographic areas.\nTo test this hypothesis, we use two proxies for aggregation scale:\n\nSum insured\nGeographic area\n\n\n\nDilution Effect on Sum Insured\nFirst, we visualize the raw relationship between burn cost and sum insured. The scatterplot shows that there is no obvious linear correlation—this is expected, since both variables exhibit strong heteroskedasticity.\n\n\n\n\n\nNext, we slice burn cost by quantiles of sum insured. In other words, we group policies into bins by sum insured and then compare the burn cost distributions within each bin. We choose five bins (quantiles at 20 %, 40 %, 60 %, 80 %, 100 %). We see that as the sum insured increases, the “center of mass” of the burn cost distribution shifts left—indicating smaller relative damages on larger policies.\n\n\n\n\n\nTo display this more succinctly, we use box plots of burn cost across deciles of sum insured. These box plots confirm the trend: burn cost tends to be lower (and more tightly clustered near zero) in the higher-insured groups.\n\n\n\n\n\n\n\n\nDilution Effect on Geographic Area\nNext, we examine whether a similar dilution effect occurs when damage is spread over larger geographic areas. We merge our burn dataset with municipality area information and then plot burn cost versus area. As before, the scatterplot alone does not reveal a clear trend, due to heteroskedasticity.\n\n\n\n\n\nWe then slice burn cost by quantiles of geographic area (again using five bins). The histograms show a shift toward lower burn costs as area increases, but this effect is much weaker than what we observed for sum insured.\n\n\n\n\n\nBox plots of burn cost by decile of area confirm the finding: there is only a slight tendency for burn cost to decrease as area grows. Overall, the dilution effect on area is negligible compared to the effect on sum insured.\n\n\n\n\n\n\n\n\nResults\n\n\n\n\n\n\nThere is a strong dilution effect with respect to sum insured, whereas the effect of geographic area is negligible or much weaker. We conclude that the clustering of burn cost values near zero primarily arises from dilution over large policy amounts, rather than being a natural effect. Now that we have established this dilution effect, we proceed to explore its statistical implications in the next chapter."
+  },
+  {
+    "objectID": "modelling/modelling_intro.html",
+    "href": "modelling/modelling_intro.html",
+    "title": "Data Modelling",
+    "section": "",
+    "text": "This chapter develops the theoretical framework for modeling highly uncertain, tail-heavy data using aggregated observations. We focus on extreme deviations in the tails and employ Monte Carlo simulations to build a coherent aggregated model.\n\n\n\n\n\n\nBecause our data is very scarce and concentrated in extremes, we face a dual challenge: (1) the rare events in the tail drive the largest damages but are also the most uncertain, and (2) we must build a model using only aggregated observations. Tail probabilities become especially unreliable when data is limited, so choosing appropriate distributional forms is critical.\nTo address these challenges, we propose a theoretical foundation that accounts for extreme tail behavior under aggregation. We will construct an aggregated model—one that can reproduce observed summaries and capture the unseen tail risk. Monte Carlo simulations play a central role: by generating many synthetic realizations under candidate distributions, we gain insight into how different assumptions affect tail estimates and overall risk."
+  },
+  {
+    "objectID": "modelling/problem_setting.html",
+    "href": "modelling/problem_setting.html",
+    "title": "Problem Setting",
+    "section": "",
+    "text": "Atomic Risk Unit\nFirst, we define the exact model setting. We are interested in risks of crop losses. One unit of our risk is typically a single field or farm — this is a quantity that does not appear explicitly in our data. We call this our atomic risk unit.\n\n\nRisk Distribution Function\nEach atomic risk unit is governed by a probability density function \\(f\\) with an unknown parameter \\(θ\\). We want to choose a family of distributions that satisfies the following properties:\n\nSupports strictly positive values (i.e., \\(x > 0\\))\nIs not necessarily bounded by 1 (we can truncate later, if needed)\nIs continuous\nCan be aggregated (under sum or average)\nHas a center of mass that may lie near zero or at some \\(x\\) between 0 and 1\n\nBy aggregation we mean taking the sum or the mean of multiple independent random variables of \\(f\\).\nIn light of actuarial and agronomic considerations, we select the Gamma family for \\(f\\).\n\n\n\n\nGamma Family\nThe Gamma family is convenient because it naturally arises as the aggregation of exponential components. Specifically:\n\nThe sum of \\(k\\) independent \\(Exp(λ=1/θ)\\) variables follows an \\(Erlang(k, θ)\\) distribution\nAn \\(Erlang(k, θ)\\) is equivalent to \\(Gamma(α = k, θ)\\) for k strictly integer\nAn \\(Exp(1/θ)\\) is a special case of \\(Gamma(α = 1, θ)\\)\nMore generally, if we hypothesize that the atomic risk follows \\(Gamma(α, θ)\\) with shape parameter \\(α\\) and scale \\(θ\\), then the sum of \\(k\\) independent copies of that atomic risk unit satisfies:\n\n\\[k * Gamma(α, θ)\\Longrightarrow Gamma(α*k, θ)\\]\n\n\nParameter setting\nIn our theoretical model, we have thus the following parameter setting:\n\n\\(k\\): number if individual fields\n\\(α\\): initial shape parameter. Usually set to 1, i.e. just fine-splits between the number of \\(k\\).\n\\(θ\\): is the risk rate of a field. the quantity we are interested in\n\nnote that none of these parameters are known a priori. This makes the problem challenging.\n\n\nVisual Illustration\nBelow we provide a visual comparison of the exponential and Erlang (a special case of Gamma) distributions under the same scale parameter \\(θ = 0.3\\):\nThese plots illustrate how summing or averaging exponential/Gamma variables shifts and reshapes the density."
+  }
+]
