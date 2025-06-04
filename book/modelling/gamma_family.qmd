@@ -1,19 +1,14 @@
-## Problem Setting {#sec-energy-intro .unnumbered}
-
-### Atomic Risk Unit
-
-First, we define the exact model setting. We are interested in risks of crop losses. One unit of our risk is typically a single field or farm — this is a quantity that does not appear explicitly in our data. We call this our **atomic risk unit**.
-
+## Gamma Family {#sec-energy-intro .unnumbered}
 
 ### Risk Distribution Function
 
-Each atomic risk unit is governed by a probability density function $f$ with an unknown parameter $θ$. We want to choose a family of distributions that satisfies the following properties:
+Our risk is governed by a probability density function $f$ with an unknown parameter $θ$. We want to choose a family of distributions that satisfies the following properties:
 
-- Supports strictly positive values (i.e., $x > 0$)
-- Is not necessarily bounded by 1 (we can truncate later, if needed)
-- Is continuous
-- Can be aggregated (under sum or average)
-- Has a center of mass that may lie near zero or at some $x$ between 0 and 1
+-   Supports strictly positive values (i.e., $x > 0$)
+-   Is not necessarily bounded by 1 (we can truncate later, if needed)
+-   Is continuous
+-   Can be aggregated (under sum or average)
+-   Has a center of mass that may lie near zero or at some $x$ between 0 and 1
 
 By **aggregation** we mean taking the sum or the mean of multiple independent random variables of $f$.
 
@@ -25,49 +20,19 @@ In light of actuarial and agronomic considerations, we select the **Gamma family
 
 The Gamma family is convenient because it naturally arises as the aggregation of exponential components. Specifically:
 
-1. The sum of $k$ independent $Exp(λ=1/θ)$ variables follows an $Erlang(k, θ)$ distribution
-2. An $Erlang(k, θ)$ is equivalent to $Gamma(α = k, θ)$ for k strictly integer
-3. An $Exp(1/θ)$ is a special case of $Gamma(α = 1, θ)$
-4. More generally, if we hypothesize that the atomic risk follows $Gamma(α, θ)$ with shape parameter $α$ and scale $θ$, then the **sum** of $k$ independent copies of that atomic risk unit satisfies:
-
+1.  The sum of $k$ independent $Exp(λ=1/θ)$ variables follows an $Erlang(k, θ)$ distribution
+2.  An $Erlang(k, θ)$ is equivalent to $Gamma(α = k, θ)$ for k strictly integer
+3.  An $Exp(1/θ)$ is a special case of $Gamma(α = 1, θ)$
+4.  More generally, if we hypothesize that the atomic risk follows $Gamma(α, θ)$ with shape parameter $α$ and scale $θ$, then the **sum** of $k$ independent copies of that atomic risk unit satisfies:
 
 $$k * Gamma(α, θ)\Longrightarrow Gamma(α*k, θ)$$
-
-
-### Model definition and Parameters
-
-In our theoretical model, we have thus the following model and parameter setting:
-
-
-::: {.callout-important title="Risk Model"}
-
-**Let $X$ be a field-level burn rate: $X∼Gamma(α,θ)$ with mean $E[X]$ and variance $αθ^2$.**
-For a municipality containing $k $
-
-
-is a random variable, which represents our atomic risk unit (field) follows a**
-where:
-- $α$ is the field-level shape parameter and defines if the risk-mode is 0 or >0
-- $θ$ is its risk scale. It is the quantity we are interested in.
-- $k$ number if individual fields
-- $n$ is a single draw of $X$ (i.e. little $x$) and represents a year
-
-
-**$Y$ is a random variable, which is the mean of all $X$ across a region (municipality). It is the quantity observe represents our atomic risk unit (field) follows a $Gamma(α, θ)$**. This model so far is valid for a theoretical setting with iid.
-
-Note that none of these parameters are known a priori. They all need to be inferred from $Y$. This makes the problem challenging.
-
-:::
-
 
 
 ### Visual Illustration
 
 Below we provide a visual comparison of the exponential and Erlang (a special case of Gamma) distributions under the same scale parameter $θ = 0.3$:
 
-
 These plots illustrate how summing or averaging exponential/Gamma variables shifts and reshapes the density.
-
 
 ```{r, fig.height=4, fig.width=8}
 #| warning: false
@@ -109,8 +74,6 @@ ggplot(combined_df, aes(x = x, y = density, color = dist)) +
   theme_minimal(base_size = 13)
 ```
 
-
-
 ```{r, fig.height=4, fig.width=8}
 #| warning: false
 #| eval: true
@@ -149,5 +112,3 @@ ggplot(combined_df, aes(x = x, y = density, color = dist)) +
   ) +
   theme_minimal(base_size = 13)
 ```
-
-

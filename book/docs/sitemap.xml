@@ -2,42 +2,62 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://hagel.ch/index.html</loc>
-    <lastmod>2025-06-02T13:41:02.256Z</lastmod>
+    <lastmod>2025-06-04T07:08:10.027Z</lastmod>
   </url>
   <url>
     <loc>https://hagel.ch/intro/introduction.html</loc>
-    <lastmod>2025-06-02T13:41:02.271Z</lastmod>
+    <lastmod>2025-05-26T10:03:29.858Z</lastmod>
   </url>
   <url>
     <loc>https://hagel.ch/intro/goal.html</loc>
-    <lastmod>2025-06-02T13:41:02.271Z</lastmod>
+    <lastmod>2025-05-26T10:03:29.858Z</lastmod>
   </url>
   <url>
     <loc>https://hagel.ch/inspection/inspect_intro.html</loc>
-    <lastmod>2025-06-02T13:41:02.271Z</lastmod>
+    <lastmod>2025-06-03T07:41:16.249Z</lastmod>
   </url>
   <url>
     <loc>https://hagel.ch/inspection/data_inspect.html</loc>
-    <lastmod>2025-06-02T13:41:02.291Z</lastmod>
+    <lastmod>2025-06-03T07:41:16.249Z</lastmod>
   </url>
   <url>
     <loc>https://hagel.ch/inspection/damage_ceiling.html</loc>
-    <lastmod>2025-06-02T13:41:02.294Z</lastmod>
+    <lastmod>2025-06-03T07:41:16.249Z</lastmod>
   </url>
   <url>
     <loc>https://hagel.ch/inspection/aggregation_effect.html</loc>
-    <lastmod>2025-06-02T13:41:02.309Z</lastmod>
+    <lastmod>2025-06-03T07:41:16.249Z</lastmod>
   </url>
   <url>
     <loc>https://hagel.ch/inspection/dilution_effect.html</loc>
-    <lastmod>2025-06-02T13:41:02.315Z</lastmod>
+    <lastmod>2025-06-03T07:41:16.249Z</lastmod>
   </url>
   <url>
     <loc>https://hagel.ch/modelling/modelling_intro.html</loc>
-    <lastmod>2025-06-02T13:41:02.322Z</lastmod>
+    <lastmod>2025-06-03T07:41:16.251Z</lastmod>
   </url>
   <url>
-    <loc>https://hagel.ch/modelling/problem_setting.html</loc>
-    <lastmod>2025-06-02T14:04:04.035Z</lastmod>
+    <loc>https://hagel.ch/modelling/gamma_family.html</loc>
+    <lastmod>2025-06-04T09:05:57.181Z</lastmod>
+  </url>
+  <url>
+    <loc>https://hagel.ch/modelling/risk_model.html</loc>
+    <lastmod>2025-06-04T09:09:27.840Z</lastmod>
+  </url>
+  <url>
+    <loc>https://hagel.ch/modelling/gamma_theory.html</loc>
+    <lastmod>2025-06-04T09:22:34.095Z</lastmod>
+  </url>
+  <url>
+    <loc>https://hagel.ch/modelling/small_sample.html</loc>
+    <lastmod>2025-06-04T09:57:08.290Z</lastmod>
+  </url>
+  <url>
+    <loc>https://hagel.ch/modelling/dependence.html</loc>
+    <lastmod>2025-06-04T10:37:08.434Z</lastmod>
+  </url>
+  <url>
+    <loc>https://hagel.ch/modelling/mixed_model.html</loc>
+    <lastmod>2025-06-04T10:55:44.853Z</lastmod>
   </url>
 </urlset>

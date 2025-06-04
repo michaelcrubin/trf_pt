@@ -1,0 +1,122 @@
+## Small Samples {#sec-energy-intro .unnumbered}
+
+
+
+
+```{r}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+
+library(here)
+invisible(capture.output(source(here("scripts", "global.R"))))
+invisible(capture.output(source(here("scripts", "helpers.R"))))
+invisible(capture.output(source(here("scripts", "gamma_funcs.R"))))
+
+
+
+```
+
+
+::: {.callout-tip title="Aggregation heals mean, not Variance"}
+
+In practice, we have only few years of observation (1-5), which is equivalent to our Monte Carlo with low $n_{sim}$. Our observed data $Y$, however, is composed of a large number of aggregated policies $k$ (certainly >100).
+We learn that in our setting with small $n_{sim}$ that large $k$ does heal mean, but not variance. In our simulation with $n_{sim}=2$ (2 years), the sample mean quickly convergence to the true mean as $k>20$, but the $SD$ remains completely off. In fact, the variance gets very tight around the (correct) sample mean and completely misses the tail.
+
+#### Critical
+Large $k$ cures the mean via the law of large numbers inside each year, but it cannot cure the tail when $n_{sim}$ (years) is small. Intuitively, with $n≤5$ the chance to observe an extreme event (year) is small, no matter how many policies are aggregated. The LLN gives us false confidence and we might drastically underestimate the tail.
+
+:::
+
+\
+\
+
+
+
+### Monte Carlo Simulations with small samples
+
+Below we now vary the number of MS simulations and observe the effect it has on the estimated mean and variance.
+
+Note that in our risk model, the $n_{sim}$ corresponds to the number of yearly observations we have for one policy, whereas $k$ signifies the number of policies in an aggregated, observed municipality data point. Our goal here is to understand the effects of both $n_{sim}$ and $k$.
+
+
+```{r, fig.height=10, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+
+make_gamma_mc_plots(theta = c(0.1),  alpha = c(1.3), k = c(1), n_sims = c(2, 5, 20, 50, 500, 5000) )
+```
+
+
+```{r, fig.height=10, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+make_gamma_mc_plots(theta = c(0.1),  alpha = c(1.3), k = c(3), n_sims = c(2, 5, 20, 50, 500, 5000) )
+
+```
+
+```{r, fig.height=10, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+
+make_gamma_mc_plots(theta = c(0.1),  alpha = c(1.3), k = c(9), n_sims = c(2, 5, 20, 50, 500, 5000) )
+
+```
+
+
+```{r, fig.height=10, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+
+make_gamma_mc_plots(theta = c(0.1),  alpha = c(1.3), k = c(27), n_sims = c(2, 5, 20, 50, 500, 5000) )
+```
+
+
+```{r, fig.height=10, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+
+make_gamma_mc_plots(theta = c(0.1),  alpha = c(1.3), k = c(100), n_sims = c(2, 5, 20, 50, 500, 5000) )
+```
+
+
+
+### Aggregation heals mean, but not variance
+
+In practice, we have only few years of observation (1-5), which is equivalent to our monte carlo with few draws. Our data, however, is composed of a large number of aggregated fields (certainly >100), i.e. k is large. It's important to note that the aggregation effect heals the mean (given i.i.d.), but NOT the variance.
+
+```{r, fig.height=10, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+
+make_gamma_mc_plots(theta = c(0.1),  alpha = c(1.3), k = c(1, 100), n_sims = c(2, 500) )
+```
+
+
+
+Worse even... as we increase k, sd gets smaller, but likely wrong.**Hence we give ourselves a wrong confidence**
+
+```{r, fig.height=10, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+
+make_gamma_mc_plots(theta = c(0.1),  alpha = c(1.3), k = c(1, 3, 9, 27), n_sims = c(2) )
+
+```
+
+

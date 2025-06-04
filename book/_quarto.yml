@@ -3,7 +3,7 @@ project:
   output-dir: docs
 
 book:
-  title: "Tarification Portugal using Bayesian Models"
+  title: "Tarification Portugal - Background & Modelling"
   reader-mode: true
   author: "Schweizer Hagel | Michael C. Rubin"
   favicon: www/img/schweizer_hagel_logo.jpeg
@@ -38,9 +38,13 @@ book:
         - inspection/dilution_effect.qmd
     - part: modelling/modelling_intro.qmd
       chapters:
-        - modelling/problem_setting.qmd
+        - modelling/gamma_family.qmd
+        - modelling/risk_model.qmd
         - modelling/gamma_theory.qmd
-        - modelling/gamma_practice.qmd
+        - modelling/small_sample.qmd
+        - modelling/dependence.qmd
+        - modelling/mixed_model.qmd
+
    #     - theory/metrics.qmd
 
     # - part: tarif/tarif_intro.qmd

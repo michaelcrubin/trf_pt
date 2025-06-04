@@ -2,31 +2,8 @@
 \
 \
 
-Weather data drives both our pricing models and claim settlements --- yet we rarely question its accuracy. This project systematically evaluates the quality of weather forecasts against real measurements. By understanding where and when forecast errors occur, we can build more resilient products and reduce uncertainty in payouts.
-
-It helps us separate long-term climate trends (important for tariffs) from short-term variability (crucial for settlement). The results will guide our choice of data vendors and improve internal data products across markets. Ultimately, this gives Schweizer Hagel a measurable edge in weather-based risk management.
-
-\
-\
-
-\
-\
-
-
 ## Why this matters {.unnumbered}
 
-Most weather data used today stems from **numerical weather prediction (NWP)** models. These models simulate the atmosphere using physical equations and are essential for forecasting.
+Agriculture is a vital economic sector in Portugal, yet many farms remain heavily underinsured. As climate change intensifies, extreme weather events pose ever-greater threats to crop yields and rural livelihoods. Farmers face rising uncertainty and high potential losses, making reliable protection more crucial than ever.
 
-However, **NWP forecasts can deviate significantly from reality** --- especially during localized or extreme events. The images below illustrate this issue:
-
-|                                               |                                               |
-|------------------------------------|------------------------------------|
-| ![](www/img/GSB_2016_rain.jpeg){width="1000"} | ![](www/img/AND_2022_rain.jpeg){width="1000"} |
-
-\
-
-In both cases, **measured precipitation** (from certified ground stations) differs sharply from the **modelled output**. Sometimes the model completely misses an event; other times it exaggerates intensity or shifts it in time.
-
-These mismatches are not rare. They happen frequently and often without clear patterns. Until now, they were observed **anecdotally**, not **quantified systematically**.
-
-This project addresses that gap: we design a rigorous, automated system to evaluate how well NWP data matches reality --- **across regions, years, and event types**.
+Despite the growing risks, there are currently few high-quality agricultural insurance products available in the market. Schweizer Hagel Portugal aims to fill this gap by leveraging its agronomic expertise, actuarial experience, and data‐science capabilities. Our mission is to strengthen the resilience of Portugal’s food production, ensuring farmers have access to insurance that truly safeguards them against climate‐driven losses.

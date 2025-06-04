@@ -1,0 +1,108 @@
+## Risk Model {#sec-energy-intro .unnumbered}
+
+### Atomic Risk Unit
+
+First, we define the practical unit we are modelling. We are interested in risks of crop losses from insurance policies. One unit of our risk is typically a single policy or field. Hence we define **one atomic risk unit to be one insurance policy**. 
+
+Note that this is a quantity that does not appear explicitly in our data. We only see an aggregation thereof.
+
+
+### Theoretical Risk Model
+
+We defined that that our atomic risk unit follows a probability density function $f$ with an unknown parameter $θ$ and we selected the **Gamma family** for $f$.
+
+We face two options for our theoretical Risk Model:
+
+1.  *Single-RV model* – treat every **policy × year** outcome in a municipality as a draw from **one** common random variable $X$ with a single scale $θ$. Thus, the RV $X$ would correspond to our observed data at municipality level.
+
+2.  *Field-specific model* – give each policy its **own** random variable $X_i$; a **year** contributes one draw for $X_i$. We then construct another RV $Y$, which aggregates all $X_i$ and corresponds to our observed data at municipality level.
+
+While Option 1 would be easier, it will mislead us for the following reasons:
+
+-   Using a single $θ$ across all risk units would introduce a systemic bias with high-risk fields being underpriced.
+-   Joining all policies and years into one RV would blow up n without giving much independent information and, thus, leads to false precision.
+-   Dependence of policies not correctly modeled and potentially underestimates the tail-risks.
+
+**Conclusion:** adopt **option 2**. Note that we are talking here about abstract policies/risk units, which we do not know from our data.
+
+
+::: {.callout-important title="Risk Model"}
+**Let** $X$ be a policy-level burn rate: $X∼Gamma(α,θ)$ with mean $E[X]$ and variance $αθ^2$. For a municipality containing $k$ independent, identical policies in a given year, the average loss
+$$
+Y_t=\frac{1}{k}\sum_{i=1}^k X_{it}
+$$
+is $Y∼Gamma(kα,θ/k)$ with mean $αθ$ and shrinking variance $αθ^2/k$.
+
+We observe $n$ yearly values of $Y$ and must estimate $α, θ$.
+
+:::
+
+
+
+### Practical Risk Model
+
+In our real world, the policies $X_i$ are not independent. In fact, they tend to be strongly dependent at least for the same perils. Intuitively, once it's dry, most drought policies in the region are affected, but only few flooding policies.
+
+Hence, we introduce the parameter $ρ\in[0,1]$ for dependence.
+
+If $ρ=0$, all policies are fully independent and we have $Y∼Gamma(kα,θ/k)$ with mean $αθ$ and variance $αθ^2/k$.
+
+If $ρ=1$, all policies are fully dependent and we have $X_{1t}=X_{2t}=...=X_{kt}$, hence $Y_{t} = X_{it}$ with mean $αθ$ and variance $αθ^2$. We have only one RV.
+
+For anything between $[0,1]$, we have Gamma mixtures.
+
+
+### Dependence & Information
+
+One of the most important goals of this endavour is to gain information. We have small samples and potentially high tail risks. Hence, it's important to squeeze out every bit of information.
+
+If we have independent policies, the variance, which is the inverse of information, shrinks from $αθ^2$ to $αθ^2/k$, thus information $I$ grows by the rate of $1\sqrt{k}$.
+
+If we have a $ρ>0$ we have:
+$$
+Var(Y)=αθ^2*(ρ+\frac{1-ρ}{k})
+$$
+
+Thus the maximum information $I_{max} = 1/Var(Y)$  erodes with dependence following $(ρ+(1-ρ)/k)^{-1/2}$
+
+We can simulate this for some settings:
+
+```{r}
+#| warning: false
+#| eval: true
+#| echo: true
+#| message: false
+library(here)
+invisible(capture.output(source(here("scripts", "global.R"))))
+a <- 1.5
+t <- 0.3
+k <- c(1, 2, 4, 8, 16, 32, 64, 128)
+r <- seq(0,1, by=0.01)
+
+dependent_var <- function(a, t, k, r){
+  a*t^2*(r+(1-r)/k)
+}
+
+X <- tidyr::expand_grid(a, t, k, r) %>%
+  mutate(var = purrr::pmap_dbl(., .f=dependent_var)) %>%
+  mutate(I_max = 1/var) %>%
+  mutate(factor = (r+(1-r)/k)^(-1/2)) %>%
+  ggplot(aes(x = r,color = factor(k), group = k)) +
+  geom_line( aes(y = factor), size = 1) +
+
+  labs(
+    x = "ρ",
+    y = "I erosion factor",
+    color = "k (n policies)",
+    title = "Eroding Information I by dependence ρ"
+  ) +
+  theme_minimal(base_size = 13)
+```
+
+
+
+::: {.callout-important title="Depencende erodes Information"}
+We can say that as ~$ρ>0.5$, almost all additional information from large sample size has vanished and approaches the information of 1 sample. Mis-specifying $ρ=0$ when it's large would introduce a false precision.
+
+In practical terms, this means that for a municipality with highly uniform risk exposure (e.g. mostly the same perils), we face a significant risk of underestimating the risk. This justified the case for our careful modelling choice.
+:::

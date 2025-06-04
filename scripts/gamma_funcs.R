@@ -233,11 +233,7 @@ plot_gamma_dependent <- function(draws, emp_average, theory, k, alpha, theta, n_
   
   # -------- plot ---------------------------------------------------
   p <- ggplot() +
-    # geom_freqpoly(data = atom_long, 
-    #               aes(value, after_stat(density), group  = id, colour = "k Fields Gamma(α,θ)"),
-    #               binwidth = theta/50,
-    #               size = 0.2, show.legend = TRUE) +
-    # 
+
     geom_density(data = emp_average,
                  aes(value, after_stat(density), colour = "Empirical avg"),
                  size =1, show.legend = TRUE) +
@@ -272,11 +268,11 @@ plot_gamma_dependent <- function(draws, emp_average, theory, k, alpha, theta, n_
                                    "αθ" = "darkred"
                         )) +
     coord_cartesian(xlim = c(0.0, theta*5), ylim = c(0.0, mx_y*2)) +
-    labs(title = paste0("Aggreg k=", k, " Fields Gamma(", alpha,",", theta, ") Rho =",rho ),
+    labs(title = paste0("Aggreg k=", k, " Fields Gamma with Rho =",rho ),
          subtitle = paste0("Simulated ", n_sims, " years"),
          x = "Burn", y = "density") +
     theme_minimal()
-  p
+
   return(p)
 }
 
@@ -318,4 +314,17 @@ make_gamma_mc_plots <- function(theta = c(0.01, 0.5),  alpha = c(1.3, 1.8), k = 
   return(p)
 }
 
+
+make_gamma_dep_mc_plots <- function(theta = c(0.01, 0.5),  alpha = c(1.3, 1.8), k = c(1, 3, 9, 27, 100), n_sims = 50000, rho = 0){
+  
+  p <- tidyr::expand_grid(theta = theta, alpha = alpha, k = k, n_sims = n_sims, rho = rho) %>%
+    purrr::pmap(., .f = run_gamma_real) %>%
+    wrap_plots(ncol = 2) +
+    plot_annotation(
+      title = paste("Mean k Gamma with Dependence ρ (n_sim" ,paste(n_sims, collapse=","),"k = ",paste(k, collapse = ",")),
+      theme = theme(plot.title = element_text(hjust = 0.5))
+    )
+
+  return(p)
+}
 

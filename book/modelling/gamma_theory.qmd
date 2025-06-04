@@ -20,6 +20,17 @@ invisible(capture.output(source(here("scripts", "gamma_funcs.R"))))
 
 
 
+
+::: {.callout-tip title="Independent policies provide certainty"}
+The Monte Carlo simulation confirms that, if we average $k$ risk units of $X∼Gamma(α,θ)$, our resulting distribution follows $X∼Gamma(kα,θ/k)$ with persistent mean $αθ$, shrinking variance $αθ^2/k$ and increasing information $I_{max} = 1/Var(Y) = 1/(αθ^2/k)$.
+
+In practical terms, as our municipality $Y$ has more fields $k$, we are ever more certain (by the rate of $1\sqrt{k}$), that our sample mean $E[X_{i}]$ is the correct risk price.
+:::
+
+\
+\
+
+
 ### Method
 
 We use Monte Carlo simulations under a purely theoretical setup, assuming full independence between units. The steps are:

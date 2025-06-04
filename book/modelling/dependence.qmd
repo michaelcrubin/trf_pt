@@ -1,0 +1,105 @@
+## Dependence {#sec-energy-intro .unnumbered}
+
+
+
+```{r}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+
+library(here)
+invisible(capture.output(source(here("scripts", "global.R"))))
+invisible(capture.output(source(here("scripts", "helpers.R"))))
+invisible(capture.output(source(here("scripts", "gamma_funcs.R"))))
+
+
+
+```
+
+::: {.callout-tip title="Dependence is hard to model"}
+The mean stays the same by linearity of Expectations. However, when fields share weather correlation and $ρ>0$, variance reduction stalls; the true distribution becomes a Gamma mixture, where in the extreme cases:
+
+- $ρ=0$ variance follows i.i.d law
+- $ρ=1$ variance stays unchanged
+- $ρ≈0.3–0.6$ we have a large gap between sample and theory.
+
+Relying on the $Gamma(kα,θ/k)$ approximation is safe only when intra-policy correlation is negligible. In our data (mid dependence $ρ$, many policies $k$) it understates tail risk.
+
+#### Solution Approach
+We can think of 2 different approaches:
+1. modelling the shared weather factor explicitly
+2. Using a hierarchical Bayesian models.
+
+:::
+
+
+\
+\
+
+### Dependency of Fields
+
+Attention. Our fields (ks) are almost certainly not independent. Likely, the same perils in the municipality are strongly dependent, whereas different perils might be independent from each other. Hence, we have a $ρ$ which is larger than 0 and smaller than 1. This changes the aggregation behaviour and makes the modelling more complicated.
+
+
+### Dependence Simulation with moment matching
+
+To inject dependence we multiply every field in the same year by a common “weather” factor following $Gamma$, whose variance is chosen so that the resulting pair-wise correlation equals the target $ρ$. The theoretical comparisons then use a moment-matched Gamma whose variance is inflated by the factor $ρ+(1-ρ)/k$, giving a simple analytic proxy for the correlated yearly average.
+
+
+#### Dependencies with large n and k
+
+```{r, fig.height=10, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+
+make_gamma_dep_mc_plots(theta = c(0.1),  alpha = c(1.3), k = c(100), n_sims = 50000, rho = c(0, 0.2, 0.4, 0.6, 0.8, 0.98))
+
+```
+
+
+#### Dependencies with large n and small k
+
+```{r, fig.height=10, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+
+make_gamma_dep_mc_plots(theta = c(0.1),  alpha = c(1.3), k = c(3), n_sims = 50000, rho =  c(0, 0.2, 0.4, 0.6, 0.8, 0.98))
+
+```
+
+
+
+#### Dependencies with small n and large k
+
+Note that we chose $n = 6$ because at 2, the picture would be completly messy.
+
+```{r, fig.height=10, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+
+make_gamma_dep_mc_plots(theta = c(0.1),  alpha = c(1.3), k = c(100), n_sims = 6, rho = c(0, 0.2, 0.4, 0.6, 0.8, 0.98))
+
+```
+
+
+#### Dependencies with small n and small k
+
+```{r, fig.height=10, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+
+make_gamma_dep_mc_plots(theta = c(0.1),  alpha = c(1.3), k = c(3), n_sims = 6, rho =  c(0, 0.2, 0.4, 0.6, 0.8, 0.98))
+
+```
+
+
+

@@ -1,0 +1,61 @@
+## Mixed Models {#sec-energy-intro .unnumbered}
+
+
+
+```{r}
+#| warning: false
+#| eval: true
+#| echo: false
+#| message: false
+
+library(here)
+invisible(capture.output(source(here("scripts", "global.R"))))
+invisible(capture.output(source(here("scripts", "helpers.R"))))
+invisible(capture.output(source(here("scripts", "gamma_funcs.R"))))
+
+
+
+```
+
+::: {.callout-tip title="Aggregation Effects and the CLT"}
+We want to shed light on the effect of aggregation of a large number of fields. What we do here is we distribute means. 
+Let's assume $X$ was uniform or beta or any wild distribution, where extreme values are perfectly possible. If we average now $k$ of these $X_i$, then by CLT we obtain a distribution following $Normal(αθ, αθ^2/k)$. This, of course, does not correctly represent the tail risks.
+
+
+:::
+
+
+\
+\
+
+
+### Summary of Modelling
+
+- We select the gamma-family for risk modelling.
+- we treat each **policy** as $X_{i}=Gamma(α,θ_i)$; the municipality loss is the yearly **average** $Y_t=\frac{1}{k}\sum X_{i,t}$.
+- This keeps crop/policy heterogeneity (different $θ_i$) and lets a shared weather factor be layered on top.
+- This prevents from false blowing up n and underestimating risk.
+- We only observe $Y$, the RV $X$ is a unobserved quantity
+
+
+
+### 2  What we’ve learned
+
+- Averaging many fields **preserves the mean** but shrinks variance only when fields are nearly independent; even mild correlation ($ρ≈0.3–0.6$) wipes out most information.
+- With very few years, the sample mean “looks fine” while SD and tails are badly under-estimated.
+- the averaging of a large number $k$ of policies in our municipality shrinks the sample mean by the LLN and gives us a false confidence.
+
+
+### Mixture models & the Bayesian link
+
+- The observed $Y_t$ is a **mixture** of Gamma components (different $\theta_i$) multiplied by a latent weather factor; single-family fits miss that shape.
+* Mixture likelihoods are multimodal and unstable in small samples, but Bayesian priors on weights and parameters regularise the problem and capture full uncertainty.
+
+### Why move to Bayesian
+
+1. Encodes the variance-inflation formula $\alpha\theta^{2}[\,\rho+(1-\rho)/k\,]$ directly through hierarchical priors.
+2. Borrows strength across crops, fields and years—critical when $n\le5$.
+3. Gives full predictive tails instead of point estimates, aligning with capital-at-risk needs.
+4. Handles the mixture structure naturally, avoiding the pitfalls of frequentist EM fits.
+
+
