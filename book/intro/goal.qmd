@@ -6,16 +6,3 @@
 
 ```
 
-## Project Goal
-
-Goal is to make complete and data-based risk tarification for Swiss Hail Portugal.
-We have 94 Crops and 274 municipalities. 
-We need a tarif for each crop x municipality. hence 25756 tarifs.
-
-
-\
-
-## Data Basis
-
-- Public Damage data on a per crop and per municipality and per year basis
-- 

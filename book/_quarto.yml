@@ -3,13 +3,14 @@ project:
   output-dir: docs
 
 book:
-  title: "Tarification Portugal - Background & Modelling"
+  title: "Tarification Portugal"
+  subtitle: "Theoretical Background & Risk Modelling"
   reader-mode: true
   author: "Schweizer Hagel | Michael C. Rubin"
   favicon: www/img/schweizer_hagel_logo.jpeg
   cover-image: www/img/ttl2.jpg
   site-url: https://hagel.ch
-  date: "2025-05-14"
+  date: "2025-06-04"
   page-footer:
     left: |
       Project Developed by <br>
@@ -26,12 +27,9 @@ book:
   chapters:
     - index.qmd
     - part: intro/introduction.qmd
-      chapters:
-        - intro/goal.qmd
-   #     - intro/problem_statement.qmd
-
     - part: inspection/inspect_intro.qmd
       chapters:
+        - inspection/data_space.qmd
         - inspection/data_inspect.qmd
         - inspection/damage_ceiling.qmd
         - inspection/aggregation_effect.qmd

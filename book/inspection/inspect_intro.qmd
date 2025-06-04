@@ -8,8 +8,7 @@ This chapter inspects the data and highlights two key challenges: data scarcity 
 \
 
 
-Our data is extremely scarce, which means we must be particularly careful in how we inspect it. In any statistical context, good analysis accounts not only for observed values but also for the **unseen** portion of the distribution. In this problem, the unseen data actually constitutes the **majority** of what we need to model—making thorough inspection even more critical.
+Our data is very scarce, which means we must be particularly careful in how we inspect it. In any statistical context, good analysis accounts not only for observed values but also for the **unseen** portion of the distribution. In this problem, the unseen data actually constitutes the **majority** of what we need to model—making thorough inspection even more critical.
 
 A further complication is that we only have **aggregated data** at hand. We do not observe the true natural phenomena directly; instead, we see effects that have been pooled across regions or sums insured. Understanding how aggregation distorts the underlying signal is therefore essential before any modeling can begin.
 
----

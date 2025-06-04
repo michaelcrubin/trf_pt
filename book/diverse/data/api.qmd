@@ -1,0 +1,11 @@
+
+# API Calls and Data Acquisition {#sec-energy-intro}
+
+
+## Ground Truth
+
+This documents defines how data are obtained, structured and pre-processed.
+
+## Meteoblue
+
+## Meteomatics

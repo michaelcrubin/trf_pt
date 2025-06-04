@@ -39,7 +39,7 @@ Let's assume $X$ was uniform or beta or any wild distribution, where extreme val
 
 
 
-### 2  What we’ve learned
+### What we’ve learned
 
 - Averaging many fields **preserves the mean** but shrinks variance only when fields are nearly independent; even mild correlation ($ρ≈0.3–0.6$) wipes out most information.
 - With very few years, the sample mean “looks fine” while SD and tails are badly under-estimated.
@@ -57,5 +57,81 @@ Let's assume $X$ was uniform or beta or any wild distribution, where extreme val
 2. Borrows strength across crops, fields and years—critical when $n\le5$.
 3. Gives full predictive tails instead of point estimates, aligning with capital-at-risk needs.
 4. Handles the mixture structure naturally, avoiding the pitfalls of frequentist EM fits.
+
+
+
+
+### Example
+
+I have a loss ratio uniform between 0-1. We can have n years and k fields. Lets simulate some combinations. 
+The bell-curve’s variance is for the sample means.
+We compare the example with n=3 and k=50 and vice versa. Both have the same amount of data (150) and both share the same mean. But the tail risk and variance if n=3/k=50 is much larger. The reason is inside-year averaging kills most randomness and all convergece to the mean by CLT. Conversely, when I have large n, then i get a good representation of different and extreme years and hence capture the true randomness. 
+
+Which is important for us? 
+Clearly the wider. Because we cannot assume that we insure entire municipalities. We insure fields.
+
+```{r, fig.height=10, fig.width=10}
+#| warning: false
+#| eval: true
+#| echo: true
+#| message: false
+library(here)
+invisible(capture.output(source(here("scripts", "global.R"))))
+
+CLT_sim_plot <- function(n, k){
+  set.seed(42)
+  # simulate raw draws and yearly averages
+  raw_draws <- runif(n * k) 
+  year_id   <- rep(1:n, each = k)
+  avg_year  <- tapply(raw_draws, year_id, mean)
+
+  df_raw <- data.frame(
+  value = raw_draws,
+  year  = factor(year_id))
+
+  df_avg <- data.frame(
+    value = avg_year,
+    what  = "Yearly average"
+  )
+  
+  mu <- 0.5
+  sigma_hat <- sqrt(1/12 / k) 
+  x_grid <- seq(0, 1, length.out = 400)
+  df_norm <- data.frame(
+    x = x_grid,
+    pdf = dnorm(x_grid, mu, sigma_hat)
+  )
+
+  p<-ggplot() +
+  geom_histogram(data = df_raw, aes(value,  after_stat(density)), binwidth = 0.05, alpha = 0.4, size=0, position = "identity", show.legend = FALSE) +
+  geom_density(data = df_avg, aes(value, after_stat(density)), colour = "steelblue", size   = 1.2, show.legend = FALSE) +
+  geom_line(data = df_norm, aes(x, pdf), colour   = "red",linetype = "dashed", size = 1, show.legend = FALSE) +
+  labs(title    = sprintf("k = %d per year, n = %d", k, n),
+       x = "loss ratio",
+       y = "density",
+       fill   = "Year",
+       colour = "Year") +
+  theme_minimal() + theme(legend.position="none")
+  return(p)
+}
+
+p1 <- CLT_sim_plot(n= 3, k= 3)
+p2 <- CLT_sim_plot(n= 50, k= 3)
+p3 <- CLT_sim_plot(n= 3, k= 50)
+p4 <- CLT_sim_plot(n= 50, k= 50)
+
+combined_plot <- (p1 + p2) / (p3 + p4) +
+  plot_annotation(
+    title = "Coloured bars: years | Blue: empirical density | Red dashed: CLT Normal",
+    theme = theme(
+      legend.position="none",
+      plot.title = element_text(
+        hjust = 0.5, 
+
+      )
+    )
+  )
+combined_plot
+```
 
 

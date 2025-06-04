@@ -1,58 +1,48 @@
-# Introduction {#sec-energy-intro .unnumbered}
+## Introduction {#sec-energy-intro .unnumbered}
 
-```{r}
-#| results: "asis"
-#| echo: false
-library(here)
-source(here("scripts", "helpers.R"))
-```
+### Project Goal
 
-## Use of Weather Data
+The objective of this project is to close the protection gap in Portugal by developing a complete, data‐driven risk tariff system for Schweizer Hagel Portugal. We must produce a separate tariff for each combination of crop and municipality. Since there are 94 crops and 274 municipalities, this amounts to  **94 * 274 =25'756 distinct tariffs**.
 
-Reliable weather data is a critical input for insurance products that depend on accurate risk modeling. In particular, the quantification of trend and volatility in precipitation patterns directly influences two key domains:
+### Data Basis
 
--   Tarification: driven by long-term climate trends.
+Our modeling relies on three main data sources:
+- **Public damage data:** Annual losses reported for each crop–municipality pair.  
+- **Weather data:** Historical meteorological observations relevant to agricultural risk.  
+- **Single‐policy data:** Limited policy‐level information to help infer underlying risk at the field level.
 
--   Settlement: highly sensitive to short-term forecast deviations and bias.
+These datasets are extremely scarce, as illustrated in Chapter “Data Inspection.” In particular, the public damage data are sparse, with many crop–municipality combinations having few or no reported losses over time.
 
-This project systematically evaluates meteorological data sources and models to identify those best suited for agricultural risk assessment and pricing, with an initial focus on Switzerland (SH) and extension to other operational regions (e.g., Serbia).
+### Aggregated Data
 
-## Core Concepts
+Unlike markets such as Switzerland—where policy‐level losses are available—in Portugal we only observe **aggregated** damage outcomes. In other words, we see the result of some unknown aggregation function applied to field‐level losses, rather than the field‐level losses themselves. This aggregation has important implications:
+- The observed values do not directly represent our individual risk units (i.e., single fields or farms).  
+- We must model how individual risks combine to produce the aggregated damage figures.  
+- Careful attention to aggregation bias is crucial to obtain accurate tariffs.
 
--   Trend: Derived from high-quality station measurements. Relevant for baseline risk modeling.
+### Careful Risk Modelling
 
--   Volatility: Captured through high-resolution forecasts. Key to short-term variability and uncertainty.
+Given the severe data limitations, short historical record, and rapidly growing exposure for Schweizer Hagel Portugal, it is critical to understand true underlying risks. In particular:
+- **Few data:** Many crop–municipality pairs have zero or minimal loss records.  
+- **Short history:** Only a limited number of years of observations are available.  
+- **Growing exposure:** As Schweizer Hagel Portugal expands, exposure to risk multiplies, making small errors in estimation potentially very costly.
 
--   Bias: Central to claim validation. Even small systematic errors can significantly impact settlement fairness.
+To address these challenges, we develop a robust theoretical model that serves as a foundation for tarification.
 
-Our evaluation contrasts model-based (MB) and measurement-mixed (MM) approaches to identify strengths across use cases. MB models offer spatial coverage, while MM models aim for calibrated, local realism.
+### Approach & Methodology
 
-## Project Goals
+1. **Inspect the data:** Carefully examine the aggregated damage and policy data to identify patterns, gaps, and heteroskedasticity.  
+2. **Understand data generation:** Determine how policy‐level losses and weather factors combine to produce the public aggregates.  
+3. **Build a theoretical model:** Use domain expertise in agronomy and actuarial science to specify a plausible distributional form for policy‐level risk.  
+4. **Simulate with Monte Carlo:** Run simulations under the theoretical model to study how aggregated data emerge from individual components.  
+5. **Estimate dependence:** Leverage weather data to quantify dependence among fields in the same municipality.  
+6. **Incorporate single‐policy insights:** Use available policy‐level data to infer the shape of the risk distribution at the atomic (field) level, rather than relying solely on aggregates.
 
-Establish a unified, high-quality data source covering multiple regions and variables since 1993.
+...then using some model either bayesian or other
 
--   Quantify error distributions and confidence bounds (CIs) for all relevant datasets.
+By combining these steps, we aim to produce reliable, data‐driven tariffs for all 25,756 crop–municipality combinations.  
 
--   Determine suitability of each data source for pricing vs. settlement applications.
 
-## Strategic Value
 
-Improved weather data enables:
 
--   Precise tarification based on long-term climate signals.
 
--   Robust settlement decisions grounded in low-bias, high-resolution event data.
-
-## Scope
-
-The project integrates:
-
--   Multi-source weather model ingestion.
-
--   Ground truth alignment using official station data.
-
--   Development of scientific metrics (e.g., nRMSE, EMD, centroid lag).
-
--   Probabilistic error analysis with visual diagnostics.
-
-This documentation presents all technical, statistical, and implementation aspects in a reproducible, modular Quarto book format.

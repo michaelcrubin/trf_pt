@@ -8,7 +8,7 @@
 
 <meta name="author" content="Michael C. Rubin">
 
-<title>Data Inspection (Burn) – Tarification Portugal - Background &amp; Modelling</title>
+<title>Data Inspection (Burn) – Tarification Portugal</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -32,7 +32,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
 <link href="../inspection/damage_ceiling.html" rel="next">
-<link href="../inspection/inspect_intro.html" rel="prev">
+<link href="../inspection/data_space.html" rel="prev">
 <link href="../www/img/schweizer_hagel_logo.jpeg" rel="icon" type="image/jpeg">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -132,7 +132,7 @@ window.Quarto = {
       <img src="https://www.hagel.ch/assets/project/images/logo.svg" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
       </a>
     <div class="sidebar-title mb-0 py-0">
-      <a href="../">Tarification Portugal - Background &amp; Modelling</a> 
+      <a href="../">Tarification Portugal</a> 
         <div class="sidebar-tools-main">
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
   <div class="quarto-reader-toggle-btn">
@@ -156,21 +156,8 @@ window.Quarto = {
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a href="../intro/introduction.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Introduction</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../intro/goal.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Goal</span></a>
-  </div>
-</li>
-      </ul>
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">Introduction</span></span>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
@@ -181,6 +168,12 @@ window.Quarto = {
           </a> 
       </div>
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../inspection/data_space.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Space</span></a>
+  </div>
+</li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../inspection/data_inspect.html" class="sidebar-item-text sidebar-link active">
@@ -337,7 +330,7 @@ burn\_cost = \frac{tot\_claims}{sum\_insured}
 </ul>
 <div class="cell">
 <div class="cell-output-display">
-<div class="tabwid"><style>.cl-988ec666{}.cl-988b57ec{font-family:'Helvetica';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-988b57f6{font-family:'Helvetica';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-988cde32{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-988cde33{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-988ce81e{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-988ce81f{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-988ce820{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-988ce821{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-988ce828{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-988ce829{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-988ce82a{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-988ce832{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-988ec666"><thead><tr style="overflow-wrap:break-word;"><th class="cl-988ce81e"><p class="cl-988cde32"><span class="cl-988b57ec">slice</span></p></th><th class="cl-988ce81f"><p class="cl-988cde33"><span class="cl-988b57ec">n</span></p></th><th class="cl-988ce81f"><p class="cl-988cde33"><span class="cl-988b57ec">percent</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-988ce820"><p class="cl-988cde32"><span class="cl-988b57f6">0_zero_inflater</span></p></td><td class="cl-988ce821"><p class="cl-988cde33"><span class="cl-988b57f6">256,511</span></p></td><td class="cl-988ce821"><p class="cl-988cde33"><span class="cl-988b57ec">99.196</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-988ce828"><p class="cl-988cde32"><span class="cl-988b57f6">1_expo_decay</span></p></td><td class="cl-988ce829"><p class="cl-988cde33"><span class="cl-988b57f6">726</span></p></td><td class="cl-988ce829"><p class="cl-988cde33"><span class="cl-988b57ec">0.281</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-988ce828"><p class="cl-988cde32"><span class="cl-988b57f6">2_natural_phenomena</span></p></td><td class="cl-988ce829"><p class="cl-988cde33"><span class="cl-988b57f6">1,307</span></p></td><td class="cl-988ce829"><p class="cl-988cde33"><span class="cl-988b57ec">0.505</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-988ce82a"><p class="cl-988cde32"><span class="cl-988b57f6">3_damage_ceiling</span></p></td><td class="cl-988ce832"><p class="cl-988cde33"><span class="cl-988b57f6">46</span></p></td><td class="cl-988ce832"><p class="cl-988cde33"><span class="cl-988b57ec">0.018</span></p></td></tr></tbody></table></div>
+<div class="tabwid"><style>.cl-ffff9376{}.cl-fffc2916{font-family:'Helvetica';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-fffc2920{font-family:'Helvetica';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-fffda9e4{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-fffda9ee{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-fffdb3c6{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-fffdb3d0{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-fffdb3d1{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-fffdb3d2{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-fffdb3da{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-fffdb3db{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-fffdb3dc{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-fffdb3e4{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-ffff9376"><thead><tr style="overflow-wrap:break-word;"><th class="cl-fffdb3c6"><p class="cl-fffda9e4"><span class="cl-fffc2916">slice</span></p></th><th class="cl-fffdb3d0"><p class="cl-fffda9ee"><span class="cl-fffc2916">n</span></p></th><th class="cl-fffdb3d0"><p class="cl-fffda9ee"><span class="cl-fffc2916">percent</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-fffdb3d1"><p class="cl-fffda9e4"><span class="cl-fffc2920">0_zero_inflater</span></p></td><td class="cl-fffdb3d2"><p class="cl-fffda9ee"><span class="cl-fffc2920">256,511</span></p></td><td class="cl-fffdb3d2"><p class="cl-fffda9ee"><span class="cl-fffc2916">99.196</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-fffdb3da"><p class="cl-fffda9e4"><span class="cl-fffc2920">1_expo_decay</span></p></td><td class="cl-fffdb3db"><p class="cl-fffda9ee"><span class="cl-fffc2920">726</span></p></td><td class="cl-fffdb3db"><p class="cl-fffda9ee"><span class="cl-fffc2916">0.281</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-fffdb3da"><p class="cl-fffda9e4"><span class="cl-fffc2920">2_natural_phenomena</span></p></td><td class="cl-fffdb3db"><p class="cl-fffda9ee"><span class="cl-fffc2920">1,307</span></p></td><td class="cl-fffdb3db"><p class="cl-fffda9ee"><span class="cl-fffc2916">0.505</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-fffdb3dc"><p class="cl-fffda9e4"><span class="cl-fffc2920">3_damage_ceiling</span></p></td><td class="cl-fffdb3e4"><p class="cl-fffda9ee"><span class="cl-fffc2920">46</span></p></td><td class="cl-fffdb3e4"><p class="cl-fffda9ee"><span class="cl-fffc2916">0.018</span></p></td></tr></tbody></table></div>
 </div>
 </div>
 </section>
@@ -843,8 +836,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../inspection/inspect_intro.html" class="pagination-link" aria-label="Data Inspection">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Data Inspection</span>
+      <a href="../inspection/data_space.html" class="pagination-link" aria-label="Data Space">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Data Space</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

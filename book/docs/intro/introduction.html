@@ -8,7 +8,7 @@
 
 <meta name="author" content="Michael C. Rubin">
 
-<title>Introduction – Tarification Portugal - Background &amp; Modelling</title>
+<title>Introduction – Tarification Portugal</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -31,7 +31,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../intro/goal.html" rel="next">
+<link href="../inspection/inspect_intro.html" rel="next">
 <link href="../index.html" rel="prev">
 <link href="../www/img/schweizer_hagel_logo.jpeg" rel="icon" type="image/jpeg">
 <script src="../site_libs/quarto-html/quarto.js"></script>
@@ -101,7 +101,7 @@ ul.task-list li input[type="checkbox"] {
       <img src="https://www.hagel.ch/assets/project/images/logo.svg" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
       </a>
     <div class="sidebar-title mb-0 py-0">
-      <a href="../">Tarification Portugal - Background &amp; Modelling</a> 
+      <a href="../">Tarification Portugal</a> 
         <div class="sidebar-tools-main">
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
   <div class="quarto-reader-toggle-btn">
@@ -125,21 +125,8 @@ ul.task-list li input[type="checkbox"] {
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a href="../intro/introduction.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Introduction</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../intro/goal.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Goal</span></a>
-  </div>
-</li>
-      </ul>
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">Introduction</span></span>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
@@ -150,6 +137,12 @@ ul.task-list li input[type="checkbox"] {
           </a> 
       </div>
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../inspection/data_space.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Space</span></a>
+  </div>
+</li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../inspection/data_inspect.html" class="sidebar-item-text sidebar-link">
@@ -233,11 +226,11 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#use-of-weather-data" id="toc-use-of-weather-data" class="nav-link active" data-scroll-target="#use-of-weather-data">Use of Weather Data</a></li>
-  <li><a href="#core-concepts" id="toc-core-concepts" class="nav-link" data-scroll-target="#core-concepts">Core Concepts</a></li>
-  <li><a href="#project-goals" id="toc-project-goals" class="nav-link" data-scroll-target="#project-goals">Project Goals</a></li>
-  <li><a href="#strategic-value" id="toc-strategic-value" class="nav-link" data-scroll-target="#strategic-value">Strategic Value</a></li>
-  <li><a href="#scope" id="toc-scope" class="nav-link" data-scroll-target="#scope">Scope</a></li>
+  <li><a href="#project-goal" id="toc-project-goal" class="nav-link active" data-scroll-target="#project-goal">Project Goal</a></li>
+  <li><a href="#data-basis" id="toc-data-basis" class="nav-link" data-scroll-target="#data-basis">Data Basis</a></li>
+  <li><a href="#aggregated-data" id="toc-aggregated-data" class="nav-link" data-scroll-target="#aggregated-data">Aggregated Data</a></li>
+  <li><a href="#careful-risk-modelling" id="toc-careful-risk-modelling" class="nav-link" data-scroll-target="#careful-risk-modelling">Careful Risk Modelling</a></li>
+  <li><a href="#approach-methodology" id="toc-approach-methodology" class="nav-link" data-scroll-target="#approach-methodology">Approach &amp; Methodology</a></li>
   </ul>
 </nav>
     </div>
@@ -263,50 +256,47 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="use-of-weather-data" class="level2">
-<h2 class="anchored" data-anchor-id="use-of-weather-data">Use of Weather Data</h2>
-<p>Reliable weather data is a critical input for insurance products that depend on accurate risk modeling. In particular, the quantification of trend and volatility in precipitation patterns directly influences two key domains:</p>
-<ul>
-<li><p>Tarification: driven by long-term climate trends.</p></li>
-<li><p>Settlement: highly sensitive to short-term forecast deviations and bias.</p></li>
-</ul>
-<p>This project systematically evaluates meteorological data sources and models to identify those best suited for agricultural risk assessment and pricing, with an initial focus on Switzerland (SH) and extension to other operational regions (e.g., Serbia).</p>
+<section id="project-goal" class="level3">
+<h3 class="anchored" data-anchor-id="project-goal">Project Goal</h3>
+<p>The objective of this project is to close the protection gap in Portugal by developing a complete, data‐driven risk tariff system for Schweizer Hagel Portugal. We must produce a separate tariff for each combination of crop and municipality. Since there are 94 crops and 274 municipalities, this amounts to <strong>94 * 274 =25’756 distinct tariffs</strong>.</p>
 </section>
-<section id="core-concepts" class="level2">
-<h2 class="anchored" data-anchor-id="core-concepts">Core Concepts</h2>
-<ul>
-<li><p>Trend: Derived from high-quality station measurements. Relevant for baseline risk modeling.</p></li>
-<li><p>Volatility: Captured through high-resolution forecasts. Key to short-term variability and uncertainty.</p></li>
-<li><p>Bias: Central to claim validation. Even small systematic errors can significantly impact settlement fairness.</p></li>
-</ul>
-<p>Our evaluation contrasts model-based (MB) and measurement-mixed (MM) approaches to identify strengths across use cases. MB models offer spatial coverage, while MM models aim for calibrated, local realism.</p>
+<section id="data-basis" class="level3">
+<h3 class="anchored" data-anchor-id="data-basis">Data Basis</h3>
+<p>Our modeling relies on three main data sources: - <strong>Public damage data:</strong> Annual losses reported for each crop–municipality pair.<br>
+- <strong>Weather data:</strong> Historical meteorological observations relevant to agricultural risk.<br>
+- <strong>Single‐policy data:</strong> Limited policy‐level information to help infer underlying risk at the field level.</p>
+<p>These datasets are extremely scarce, as illustrated in Chapter “Data Inspection.” In particular, the public damage data are sparse, with many crop–municipality combinations having few or no reported losses over time.</p>
 </section>
-<section id="project-goals" class="level2">
-<h2 class="anchored" data-anchor-id="project-goals">Project Goals</h2>
-<p>Establish a unified, high-quality data source covering multiple regions and variables since 1993.</p>
-<ul>
-<li><p>Quantify error distributions and confidence bounds (CIs) for all relevant datasets.</p></li>
-<li><p>Determine suitability of each data source for pricing vs.&nbsp;settlement applications.</p></li>
-</ul>
+<section id="aggregated-data" class="level3">
+<h3 class="anchored" data-anchor-id="aggregated-data">Aggregated Data</h3>
+<p>Unlike markets such as Switzerland—where policy‐level losses are available—in Portugal we only observe <strong>aggregated</strong> damage outcomes. In other words, we see the result of some unknown aggregation function applied to field‐level losses, rather than the field‐level losses themselves. This aggregation has important implications: - The observed values do not directly represent our individual risk units (i.e., single fields or farms).<br>
+- We must model how individual risks combine to produce the aggregated damage figures.<br>
+- Careful attention to aggregation bias is crucial to obtain accurate tariffs.</p>
 </section>
-<section id="strategic-value" class="level2">
-<h2 class="anchored" data-anchor-id="strategic-value">Strategic Value</h2>
-<p>Improved weather data enables:</p>
-<ul>
-<li><p>Precise tarification based on long-term climate signals.</p></li>
-<li><p>Robust settlement decisions grounded in low-bias, high-resolution event data.</p></li>
-</ul>
+<section id="careful-risk-modelling" class="level3">
+<h3 class="anchored" data-anchor-id="careful-risk-modelling">Careful Risk Modelling</h3>
+<p>Given the severe data limitations, short historical record, and rapidly growing exposure for Schweizer Hagel Portugal, it is critical to understand true underlying risks. In particular: - <strong>Few data:</strong> Many crop–municipality pairs have zero or minimal loss records.<br>
+- <strong>Short history:</strong> Only a limited number of years of observations are available.<br>
+- <strong>Growing exposure:</strong> As Schweizer Hagel Portugal expands, exposure to risk multiplies, making small errors in estimation potentially very costly.</p>
+<p>To address these challenges, we develop a robust theoretical model that serves as a foundation for tarification.</p>
 </section>
-<section id="scope" class="level2">
-<h2 class="anchored" data-anchor-id="scope">Scope</h2>
-<p>The project integrates:</p>
-<ul>
-<li><p>Multi-source weather model ingestion.</p></li>
-<li><p>Ground truth alignment using official station data.</p></li>
-<li><p>Development of scientific metrics (e.g., nRMSE, EMD, centroid lag).</p></li>
-<li><p>Probabilistic error analysis with visual diagnostics.</p></li>
-</ul>
-<p>This documentation presents all technical, statistical, and implementation aspects in a reproducible, modular Quarto book format.</p>
+<section id="approach-methodology" class="level3">
+<h3 class="anchored" data-anchor-id="approach-methodology">Approach &amp; Methodology</h3>
+<ol type="1">
+<li><strong>Inspect the data:</strong> Carefully examine the aggregated damage and policy data to identify patterns, gaps, and heteroskedasticity.<br>
+</li>
+<li><strong>Understand data generation:</strong> Determine how policy‐level losses and weather factors combine to produce the public aggregates.<br>
+</li>
+<li><strong>Build a theoretical model:</strong> Use domain expertise in agronomy and actuarial science to specify a plausible distributional form for policy‐level risk.<br>
+</li>
+<li><strong>Simulate with Monte Carlo:</strong> Run simulations under the theoretical model to study how aggregated data emerge from individual components.<br>
+</li>
+<li><strong>Estimate dependence:</strong> Leverage weather data to quantify dependence among fields in the same municipality.<br>
+</li>
+<li><strong>Incorporate single‐policy insights:</strong> Use available policy‐level data to infer the shape of the risk distribution at the atomic (field) level, rather than relying solely on aggregates.</li>
+</ol>
+<p>…then using some model either bayesian or other</p>
+<p>By combining these steps, we aim to produce reliable, data‐driven tariffs for all 25,756 crop–municipality combinations.</p>
 
 
 </section>
@@ -736,8 +726,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../intro/goal.html" class="pagination-link" aria-label="Goal">
-        <span class="nav-page-text">Goal</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../inspection/inspect_intro.html" class="pagination-link" aria-label="Data Inspection">
+        <span class="nav-page-text">Data Inspection</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

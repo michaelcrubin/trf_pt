@@ -2,7 +2,7 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Tarification Portugal - Background & Modelling",
+    "title": "Tarification Portugal",
     "section": "",
     "text": "Why this matters\nAgriculture is a vital economic sector in Portugal, yet many farms remain heavily underinsured. As climate change intensifies, extreme weather events pose ever-greater threats to crop yields and rural livelihoods. Farmers face rising uncertainty and high potential losses, making reliable protection more crucial than ever.\nDespite the growing risks, there are currently few high-quality agricultural insurance products available in the market. Schweizer Hagel Portugal aims to fill this gap by leveraging its agronomic expertise, actuarial experience, and data‐science capabilities. Our mission is to strengthen the resilience of Portugal’s food production, ensuring farmers have access to insurance that truly safeguards them against climate‐driven losses.",
     "crumbs": [
@@ -14,81 +14,9 @@
     "href": "intro/introduction.html",
     "title": "Introduction",
     "section": "",
-    "text": "Use of Weather Data\nReliable weather data is a critical input for insurance products that depend on accurate risk modeling. In particular, the quantification of trend and volatility in precipitation patterns directly influences two key domains:\nThis project systematically evaluates meteorological data sources and models to identify those best suited for agricultural risk assessment and pricing, with an initial focus on Switzerland (SH) and extension to other operational regions (e.g., Serbia).",
+    "text": "Project Goal\nThe objective of this project is to close the protection gap in Portugal by developing a complete, data‐driven risk tariff system for Schweizer Hagel Portugal. We must produce a separate tariff for each combination of crop and municipality. Since there are 94 crops and 274 municipalities, this amounts to 94 * 274 =25’756 distinct tariffs.\n\n\nData Basis\nOur modeling relies on three main data sources: - Public damage data: Annual losses reported for each crop–municipality pair.\n- Weather data: Historical meteorological observations relevant to agricultural risk.\n- Single‐policy data: Limited policy‐level information to help infer underlying risk at the field level.\nThese datasets are extremely scarce, as illustrated in Chapter “Data Inspection.” In particular, the public damage data are sparse, with many crop–municipality combinations having few or no reported losses over time.\n\n\nAggregated Data\nUnlike markets such as Switzerland—where policy‐level losses are available—in Portugal we only observe aggregated damage outcomes. In other words, we see the result of some unknown aggregation function applied to field‐level losses, rather than the field‐level losses themselves. This aggregation has important implications: - The observed values do not directly represent our individual risk units (i.e., single fields or farms).\n- We must model how individual risks combine to produce the aggregated damage figures.\n- Careful attention to aggregation bias is crucial to obtain accurate tariffs.\n\n\nCareful Risk Modelling\nGiven the severe data limitations, short historical record, and rapidly growing exposure for Schweizer Hagel Portugal, it is critical to understand true underlying risks. In particular: - Few data: Many crop–municipality pairs have zero or minimal loss records.\n- Short history: Only a limited number of years of observations are available.\n- Growing exposure: As Schweizer Hagel Portugal expands, exposure to risk multiplies, making small errors in estimation potentially very costly.\nTo address these challenges, we develop a robust theoretical model that serves as a foundation for tarification.\n\n\nApproach & Methodology\n\nInspect the data: Carefully examine the aggregated damage and policy data to identify patterns, gaps, and heteroskedasticity.\n\nUnderstand data generation: Determine how policy‐level losses and weather factors combine to produce the public aggregates.\n\nBuild a theoretical model: Use domain expertise in agronomy and actuarial science to specify a plausible distributional form for policy‐level risk.\n\nSimulate with Monte Carlo: Run simulations under the theoretical model to study how aggregated data emerge from individual components.\n\nEstimate dependence: Leverage weather data to quantify dependence among fields in the same municipality.\n\nIncorporate single‐policy insights: Use available policy‐level data to infer the shape of the risk distribution at the atomic (field) level, rather than relying solely on aggregates.\n\n…then using some model either bayesian or other\nBy combining these steps, we aim to produce reliable, data‐driven tariffs for all 25,756 crop–municipality combinations.",
     "crumbs": [
       "Introduction"
-    ]
-  },
-  {
-    "objectID": "intro/introduction.html#use-of-weather-data",
-    "href": "intro/introduction.html#use-of-weather-data",
-    "title": "Introduction",
-    "section": "",
-    "text": "Tarification: driven by long-term climate trends.\nSettlement: highly sensitive to short-term forecast deviations and bias.",
-    "crumbs": [
-      "Introduction"
-    ]
-  },
-  {
-    "objectID": "intro/introduction.html#core-concepts",
-    "href": "intro/introduction.html#core-concepts",
-    "title": "Introduction",
-    "section": "Core Concepts",
-    "text": "Core Concepts\n\nTrend: Derived from high-quality station measurements. Relevant for baseline risk modeling.\nVolatility: Captured through high-resolution forecasts. Key to short-term variability and uncertainty.\nBias: Central to claim validation. Even small systematic errors can significantly impact settlement fairness.\n\nOur evaluation contrasts model-based (MB) and measurement-mixed (MM) approaches to identify strengths across use cases. MB models offer spatial coverage, while MM models aim for calibrated, local realism.",
-    "crumbs": [
-      "Introduction"
-    ]
-  },
-  {
-    "objectID": "intro/introduction.html#project-goals",
-    "href": "intro/introduction.html#project-goals",
-    "title": "Introduction",
-    "section": "Project Goals",
-    "text": "Project Goals\nEstablish a unified, high-quality data source covering multiple regions and variables since 1993.\n\nQuantify error distributions and confidence bounds (CIs) for all relevant datasets.\nDetermine suitability of each data source for pricing vs. settlement applications.",
-    "crumbs": [
-      "Introduction"
-    ]
-  },
-  {
-    "objectID": "intro/introduction.html#strategic-value",
-    "href": "intro/introduction.html#strategic-value",
-    "title": "Introduction",
-    "section": "Strategic Value",
-    "text": "Strategic Value\nImproved weather data enables:\n\nPrecise tarification based on long-term climate signals.\nRobust settlement decisions grounded in low-bias, high-resolution event data.",
-    "crumbs": [
-      "Introduction"
-    ]
-  },
-  {
-    "objectID": "intro/introduction.html#scope",
-    "href": "intro/introduction.html#scope",
-    "title": "Introduction",
-    "section": "Scope",
-    "text": "Scope\nThe project integrates:\n\nMulti-source weather model ingestion.\nGround truth alignment using official station data.\nDevelopment of scientific metrics (e.g., nRMSE, EMD, centroid lag).\nProbabilistic error analysis with visual diagnostics.\n\nThis documentation presents all technical, statistical, and implementation aspects in a reproducible, modular Quarto book format.",
-    "crumbs": [
-      "Introduction"
-    ]
-  },
-  {
-    "objectID": "intro/goal.html",
-    "href": "intro/goal.html",
-    "title": "Goal",
-    "section": "",
-    "text": "Project Goal\nGoal is to make complete and data-based risk tarification for Swiss Hail Portugal. We have 94 Crops and 274 municipalities. We need a tarif for each crop x municipality. hence 25756 tarifs.",
-    "crumbs": [
-      "Introduction",
-      "Goal"
-    ]
-  },
-  {
-    "objectID": "intro/goal.html#data-basis",
-    "href": "intro/goal.html#data-basis",
-    "title": "Goal",
-    "section": "Data Basis",
-    "text": "Data Basis\n\nPublic Damage data on a per crop and per municipality and per year basis",
-    "crumbs": [
-      "Introduction",
-      "Goal"
     ]
   },
   {
@@ -96,9 +24,20 @@
     "href": "inspection/inspect_intro.html",
     "title": "Data Inspection",
     "section": "",
-    "text": "Summary\n\n\n\nThis chapter inspects the data and highlights two key challenges: data scarcity and aggregation. We must recognize that most of the distribution is unseen, and that we only observe aggregated effects rather than true underlying phenomena.\n\n\n\n\n\nOur data is extremely scarce, which means we must be particularly careful in how we inspect it. In any statistical context, good analysis accounts not only for observed values but also for the unseen portion of the distribution. In this problem, the unseen data actually constitutes the majority of what we need to model—making thorough inspection even more critical.\nA further complication is that we only have aggregated data at hand. We do not observe the true natural phenomena directly; instead, we see effects that have been pooled across regions or sums insured. Understanding how aggregation distorts the underlying signal is therefore essential before any modeling can begin.",
+    "text": "Summary\n\n\n\nThis chapter inspects the data and highlights two key challenges: data scarcity and aggregation. We must recognize that most of the distribution is unseen, and that we only observe aggregated effects rather than true underlying phenomena.\n\n\n\n\n\nOur data is very scarce, which means we must be particularly careful in how we inspect it. In any statistical context, good analysis accounts not only for observed values but also for the unseen portion of the distribution. In this problem, the unseen data actually constitutes the majority of what we need to model—making thorough inspection even more critical.\nA further complication is that we only have aggregated data at hand. We do not observe the true natural phenomena directly; instead, we see effects that have been pooled across regions or sums insured. Understanding how aggregation distorts the underlying signal is therefore essential before any modeling can begin.",
     "crumbs": [
       "Data Inspection"
+    ]
+  },
+  {
+    "objectID": "inspection/data_space.html",
+    "href": "inspection/data_space.html",
+    "title": "Data Space",
+    "section": "",
+    "text": "Summary\n\n\n\nAs an initial step, we want to understand the data we have available.\nWe can conceptualize these data as a data space, where each variable is a dimension. Hence:\n\nWe have 278 municipalities\nWe have 93 crops\nWe have 10 years\nOur data set has 2127 entries\n\nWhich means that our data space is 258540. Our data set covers 0.823% of the data space.\nWith other words, we have very sparse data.\n\n\n\n\n\n\nCrop Distribution\nWe can see that, out of the 49 crops, only some 20 have more than 20 data entries.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nYear Distribution\nThe years, on the other hand, are relatively well distributed.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nGeographic Distribution\n\nDistribution by Municipality\n\n\n\n\n\n\n\n\n\n\n\n\n\nDistribution by District\n\n\n\n\n\n\n\n\n\n\n\n\n\nDistribution by Agro Region\n\n\n\n\n\n\n\n\n\n\n\n\n\nDistribution on a Map\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nData Space\nThe subsequent cubes give us a visual idea about the densities of these data and how they behave on geographic aggregation.\n\n\n\nOn Municipality Level\n\n\n\n\n\n\nOn District Level\n\n\n\n\n\n\nOn Agro Region Level",
+    "crumbs": [
+      "Data Inspection",
+      "Data Space"
     ]
   },
   {
@@ -215,7 +154,7 @@
     "href": "modelling/mixed_model.html",
     "title": "Mixed Models",
     "section": "",
-    "text": "Aggregation Effects and the CLT\n\n\n\nWe want to shed light on the effect of aggregation of a large number of fields. What we do here is we distribute means. Let’s assume \\(X\\) was uniform or beta or any wild distribution, where extreme values are perfectly possible. If we average now \\(k\\) of these \\(X_i\\), then by CLT we obtain a distribution following \\(Normal(αθ, αθ^2/k)\\). This, of course, does not correctly represent the tail risks.\n\n\n\n\n\n\nSummary of Modelling\n\nWe select the gamma-family for risk modelling.\nwe treat each policy as \\(X_{i}=Gamma(α,θ_i)\\); the municipality loss is the yearly average \\(Y_t=\\frac{1}{k}\\sum X_{i,t}\\).\nThis keeps crop/policy heterogeneity (different \\(θ_i\\)) and lets a shared weather factor be layered on top.\nThis prevents from false blowing up n and underestimating risk.\nWe only observe \\(Y\\), the RV \\(X\\) is a unobserved quantity\n\n\n\n2 What we’ve learned\n\nAveraging many fields preserves the mean but shrinks variance only when fields are nearly independent; even mild correlation (\\(ρ≈0.3–0.6\\)) wipes out most information.\nWith very few years, the sample mean “looks fine” while SD and tails are badly under-estimated.\nthe averaging of a large number \\(k\\) of policies in our municipality shrinks the sample mean by the LLN and gives us a false confidence.\n\n\n\nMixture models & the Bayesian link\n\nThe observed \\(Y_t\\) is a mixture of Gamma components (different \\(\\theta_i\\)) multiplied by a latent weather factor; single-family fits miss that shape.\nMixture likelihoods are multimodal and unstable in small samples, but Bayesian priors on weights and parameters regularise the problem and capture full uncertainty.\n\n\n\nWhy move to Bayesian\n\nEncodes the variance-inflation formula \\(\\alpha\\theta^{2}[\\,\\rho+(1-\\rho)/k\\,]\\) directly through hierarchical priors.\nBorrows strength across crops, fields and years—critical when \\(n\\le5\\).\nGives full predictive tails instead of point estimates, aligning with capital-at-risk needs.\nHandles the mixture structure naturally, avoiding the pitfalls of frequentist EM fits.",
+    "text": "Aggregation Effects and the CLT\n\n\n\nWe want to shed light on the effect of aggregation of a large number of fields. What we do here is we distribute means. Let’s assume \\(X\\) was uniform or beta or any wild distribution, where extreme values are perfectly possible. If we average now \\(k\\) of these \\(X_i\\), then by CLT we obtain a distribution following \\(Normal(αθ, αθ^2/k)\\). This, of course, does not correctly represent the tail risks.\n\n\n\n\n\n\nSummary of Modelling\n\nWe select the gamma-family for risk modelling.\nwe treat each policy as \\(X_{i}=Gamma(α,θ_i)\\); the municipality loss is the yearly average \\(Y_t=\\frac{1}{k}\\sum X_{i,t}\\).\nThis keeps crop/policy heterogeneity (different \\(θ_i\\)) and lets a shared weather factor be layered on top.\nThis prevents from false blowing up n and underestimating risk.\nWe only observe \\(Y\\), the RV \\(X\\) is a unobserved quantity\n\n\n\nWhat we’ve learned\n\nAveraging many fields preserves the mean but shrinks variance only when fields are nearly independent; even mild correlation (\\(ρ≈0.3–0.6\\)) wipes out most information.\nWith very few years, the sample mean “looks fine” while SD and tails are badly under-estimated.\nthe averaging of a large number \\(k\\) of policies in our municipality shrinks the sample mean by the LLN and gives us a false confidence.\n\n\n\nMixture models & the Bayesian link\n\nThe observed \\(Y_t\\) is a mixture of Gamma components (different \\(\\theta_i\\)) multiplied by a latent weather factor; single-family fits miss that shape.\nMixture likelihoods are multimodal and unstable in small samples, but Bayesian priors on weights and parameters regularise the problem and capture full uncertainty.\n\n\n\nWhy move to Bayesian\n\nEncodes the variance-inflation formula \\(\\alpha\\theta^{2}[\\,\\rho+(1-\\rho)/k\\,]\\) directly through hierarchical priors.\nBorrows strength across crops, fields and years—critical when \\(n\\le5\\).\nGives full predictive tails instead of point estimates, aligning with capital-at-risk needs.\nHandles the mixture structure naturally, avoiding the pitfalls of frequentist EM fits.\n\n\n\nExample\nI have a loss ratio uniform between 0-1. We can have n years and k fields. Lets simulate some combinations. The bell-curve’s variance is for the sample means. We compare the example with n=3 and k=50 and vice versa. Both have the same amount of data (150) and both share the same mean. But the tail risk and variance if n=3/k=50 is much larger. The reason is inside-year averaging kills most randomness and all convergece to the mean by CLT. Conversely, when I have large n, then i get a good representation of different and extreme years and hence capture the true randomness.\nWhich is important for us? Clearly the wider. Because we cannot assume that we insure entire municipalities. We insure fields.\n\n\nShow Code\nlibrary(here)\ninvisible(capture.output(source(here(\"scripts\", \"global.R\"))))\n\nCLT_sim_plot &lt;- function(n, k){\n  set.seed(42)\n  # simulate raw draws and yearly averages\n  raw_draws &lt;- runif(n * k) \n  year_id   &lt;- rep(1:n, each = k)\n  avg_year  &lt;- tapply(raw_draws, year_id, mean)\n\n  df_raw &lt;- data.frame(\n  value = raw_draws,\n  year  = factor(year_id))\n\n  df_avg &lt;- data.frame(\n    value = avg_year,\n    what  = \"Yearly average\"\n  )\n  \n  mu &lt;- 0.5\n  sigma_hat &lt;- sqrt(1/12 / k) \n  x_grid &lt;- seq(0, 1, length.out = 400)\n  df_norm &lt;- data.frame(\n    x = x_grid,\n    pdf = dnorm(x_grid, mu, sigma_hat)\n  )\n\n  p&lt;-ggplot() +\n  geom_histogram(data = df_raw, aes(value,  after_stat(density)), binwidth = 0.05, alpha = 0.4, size=0, position = \"identity\", show.legend = FALSE) +\n  geom_density(data = df_avg, aes(value, after_stat(density)), colour = \"steelblue\", size   = 1.2, show.legend = FALSE) +\n  geom_line(data = df_norm, aes(x, pdf), colour   = \"red\",linetype = \"dashed\", size = 1, show.legend = FALSE) +\n  labs(title    = sprintf(\"k = %d per year, n = %d\", k, n),\n       x = \"loss ratio\",\n       y = \"density\",\n       fill   = \"Year\",\n       colour = \"Year\") +\n  theme_minimal() + theme(legend.position=\"none\")\n  return(p)\n}\n\np1 &lt;- CLT_sim_plot(n= 3, k= 3)\np2 &lt;- CLT_sim_plot(n= 50, k= 3)\np3 &lt;- CLT_sim_plot(n= 3, k= 50)\np4 &lt;- CLT_sim_plot(n= 50, k= 50)\n\ncombined_plot &lt;- (p1 + p2) / (p3 + p4) +\n  plot_annotation(\n    title = \"Coloured bars: years | Blue: empirical density | Red dashed: CLT Normal\",\n    theme = theme(\n      legend.position=\"none\",\n      plot.title = element_text(\n        hjust = 0.5, \n\n      )\n    )\n  )\ncombined_plot",
     "crumbs": [
       "Data Modelling",
       "Mixed Models"
